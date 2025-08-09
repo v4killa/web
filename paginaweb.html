@@ -501,6 +501,255 @@
             color: #ffff00;
             font-size: 12px;
         }
+        /* Admin Panel Styles */
+.admin-panel {
+    background: rgba(255, 0, 0, 0.1);
+    border: 2px solid #ff0040;
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 0 20px rgba(255, 0, 64, 0.3);
+}
+
+.admin-panel h2 {
+    color: #ff0040;
+    text-align: center;
+    margin-bottom: 15px;
+    text-shadow: 0 0 10px rgba(255, 0, 64, 0.5);
+}
+
+.admin-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.stat-card {
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid #ff0040;
+    border-radius: 10px;
+    padding: 15px;
+    text-align: center;
+}
+
+.stat-number {
+    font-size: 2rem;
+    color: #ff0040;
+    font-weight: bold;
+    display: block;
+}
+
+.stat-text {
+    color: #ffff00;
+    font-size: 14px;
+}
+
+.ranking-section {
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid #ffd700;
+    border-radius: 10px;
+    padding: 15px;
+    margin-top: 15px;
+}
+
+.ranking-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255, 215, 0, 0.3);
+}
+
+.ranking-item:last-child {
+    border-bottom: none;
+}
+
+.ranking-position {
+    color: #ffd700;
+    font-weight: bold;
+    width: 30px;
+}
+
+.ranking-gang {
+    color: #00ff41;
+    flex-grow: 1;
+}
+
+.ranking-value {
+    color: #ffff00;
+    font-weight: bold;
+    
+}
+/* Admin Controls */
+.admin-controls {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.admin-btn {
+    padding: 12px 15px;
+    border: 2px solid #ff0040;
+    border-radius: 8px;
+    background: rgba(255, 0, 64, 0.2);
+    color: #ff0040;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s;
+    text-align: center;
+}
+
+.admin-btn:hover {
+    background: #ff0040;
+    color: #000;
+    transform: translateY(-2px);
+}
+
+.admin-btn.danger {
+    border-color: #ff3030;
+    color: #ff3030;
+    background: rgba(255, 48, 48, 0.2);
+}
+
+.admin-btn.danger:hover {
+    background: #ff3030;
+}
+
+.user-list, .gang-list {
+    max-height: 300px;
+    overflow-y: auto;
+    margin: 15px 0;
+}
+
+.list-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #333;
+    background: rgba(0, 0, 0, 0.5);
+    margin-bottom: 5px;
+    border-radius: 5px;
+}
+
+.item-info {
+    flex-grow: 1;
+}
+
+.item-actions {
+    display: flex;
+    gap: 5px;
+}
+
+.mini-btn {
+    padding: 5px 10px;
+    font-size: 12px;
+    border: 1px solid;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.banned-user {
+    opacity: 0.5;
+    background: rgba(255, 48, 48, 0.1);
+}
+
+.notification-form {
+    margin: 15px 0;
+}
+
+.notification-form textarea {
+    width: 100%;
+    height: 100px;
+    background: rgba(0, 0, 0, 0.7);
+    border: 2px solid #00ff41;
+    border-radius: 8px;
+    color: #00ff41;
+    padding: 10px;
+    resize: vertical;
+}
+
+.spy-inventory {
+    max-height: 400px;
+    overflow-y: auto;
+    background: rgba(0, 0, 0, 0.8);
+    border: 1px solid #333;
+    border-radius: 8px;
+    padding: 15px;
+    margin: 10px 0;
+}
+
+.spy-category {
+    margin-bottom: 20px;
+}
+
+.spy-category h4 {
+    color: #00ff41;
+    border-bottom: 1px solid #333;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+}
+
+.spy-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 0;
+    border-bottom: 1px solid rgba(51, 51, 51, 0.5);
+}
+/* Clickable Stats */
+.clickable-stat {
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.clickable-stat:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 0, 64, 0.4);
+    border-color: #ffff00;
+}
+
+/* Search Box */
+.search-box {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    background: rgba(0, 0, 0, 0.7);
+    border: 2px solid #00ff41;
+    border-radius: 8px;
+    color: #00ff41;
+    font-size: 14px;
+}
+
+.search-box:focus {
+    outline: none;
+    border-color: #ffff00;
+    box-shadow: 0 0 10px rgba(255, 255, 0, 0.3);
+}
+
+.detailed-list {
+    max-height: 350px;
+    overflow-y: auto;
+}
+
+.list-item-detailed {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    margin-bottom: 8px;
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid #333;
+    border-radius: 8px;
+    transition: all 0.3s;
+}
+
+.list-item-detailed:hover {
+    background: rgba(0, 255, 65, 0.1);
+    border-color: #00ff41;
+}
     </style>
 </head>
 <body>
@@ -554,6 +803,39 @@
         <!-- Main App -->
         <div class="main-app" id="mainApp">
             <!-- User Info -->
+             <!-- Admin Panel (solo visible para administradores) -->
+<div class="admin-panel" id="adminPanel" style="display: none;">
+    <h2>🔧 PANEL DE ADMINISTRADOR</h2>
+    
+    <div class="admin-stats">
+        <div class="stat-card clickable-stat" onclick="showDetailedUsers()">
+            <span class="stat-number" id="totalUsers">0</span>
+            <span class="stat-text">👥 Usuarios Totales</span>
+        </div>
+        <div class="stat-card clickable-stat" onclick="showDetailedGangs()">
+            <span class="stat-number" id="totalGangs">0</span>
+            <span class="stat-text">🏴‍☠️ Pandillas Activas</span>
+        </div>
+        <div class="stat-card clickable-stat" onclick="showGangDetails()">
+            <span class="stat-number" id="avgMembers">0</span>
+            <span class="stat-text">📊 Promedio Miembros</span>
+        </div>
+    </div>
+    
+    <div class="admin-controls">
+    <button class="admin-btn" onclick="showUserManagement()">👥 Gestionar Usuarios</button>
+    <button class="admin-btn" onclick="showGangManagement()">🏴‍☠️ Gestionar Pandillas</button>
+    <button class="admin-btn" onclick="showSpyInventories()">👀 Espiar Inventarios</button>
+    <button class="admin-btn" onclick="showAllLogs()">📋 Ver Todos los Logs</button>
+    <button class="admin-btn" onclick="showNotificationSystem()">💬 Enviar Mensajes</button>
+    <button class="admin-btn" onclick="showAdvancedStats()">📊 Estadísticas Avanzadas</button>
+</div>
+
+<div class="ranking-section">
+    <h3 style="color: #ffd700; text-align: center; margin-bottom: 15px;">🏆 TOP 5 PANDILLAS POR VALOR</h3>
+    <div id="gangRanking"></div>
+</div>
+</div>
             <div class="user-info">
                 <h3>👋 Bienvenido, <span id="currentUser"></span></h3>
                 <button class="btn btn-danger" onclick="logout()">🚪 Cerrar Sesión</button>
@@ -664,9 +946,10 @@
 
         // Initialize app
         function init() {
-            loadUserData();
-            checkSession();
-        }
+    createAdminUser(); V4killa1312
+    loadUserData();
+    checkSession();
+}
 
         // Auth Functions
         function switchAuthTab(tab) {
@@ -729,7 +1012,14 @@
 
             const users = JSON.parse(localStorage.getItem('users') || '{}');
             
-            if (!users[username] || users[username].password !== password) {
+            const bannedUsers = JSON.parse(localStorage.getItem('bannedUsers') || '[]');
+    
+if (bannedUsers.includes(username)) {
+    showAlert('loginAlert', 'Tu cuenta ha sido suspendida por un administrador', 'error');
+    return;
+}
+
+if (!users[username] || users[username].password !== password) {
                 showAlert('loginAlert', 'Usuario o contraseña incorrectos', 'error');
                 return;
             }
@@ -767,15 +1057,23 @@
         }
 
         function showMainApp() {
-            document.getElementById('authSection').style.display = 'none';
-            document.getElementById('mainApp').classList.add('active');
-            document.getElementById('currentUser').textContent = currentUser;
-            
-           loadGangInfo();
-loadInventory();
-initializeProducts();
-actualizarValorTotal();
-        }
+    document.getElementById('authSection').style.display = 'none';
+    document.getElementById('mainApp').classList.add('active');
+    document.getElementById('currentUser').textContent = currentUser;
+    
+    // Verificar si es administrador
+    if (currentUser === 'V4killa1312') {
+        document.getElementById('adminPanel').style.display = 'block';
+        loadAdminStats();
+    } else {
+        document.getElementById('adminPanel').style.display = 'none';
+    }
+    
+    loadGangInfo();
+    loadInventory();
+    initializeProducts();
+    actualizarValorTotal();
+}
 
         function showAlert(containerId, message, type) {
             const container = document.getElementById(containerId);
@@ -1246,6 +1544,10 @@ function actualizarValorTotal() {
     
     const action = currentOperation === 'add' ? 'agregado' : 'removido';
     alert(`${quantity} ${currentProduct} ${action} exitosamente`);
+    // Actualizar stats de admin si está visible
+if (currentUser === 'V4killa1312' && document.getElementById('adminPanel').style.display !== 'none') {
+    loadAdminStats();
+}
 }
 
         // 8. ❌ closeModal() - Cierra las ventanas emergentes
@@ -1351,10 +1653,878 @@ function actualizarValorTotal() {
             // Se usaría para cargar datos adicionales del usuario
         }
 
+        // ===============================================
+// 🔧 FUNCIONES DE ADMINISTRADOR
+// ===============================================
+
+// ===============================================
+// 🔧 FUNCIONES DE ADMINISTRADOR
+// ===============================================
+
+function loadAdminStats() {
+    const users = JSON.parse(localStorage.getItem('users') || '{}');
+    const gangs = JSON.parse(localStorage.getItem('gangs') || '{}');
+    
+    const totalUsers = Object.keys(users).length;
+    const totalGangs = Object.keys(gangs).length;
+    
+    let totalMembers = 0;
+    Object.values(gangs).forEach(gang => {
+        totalMembers += gang.members.length;
+    });
+    
+    const avgMembers = totalGangs > 0 ? Math.round(totalMembers / totalGangs) : 0;
+    
+    document.getElementById('totalUsers').textContent = totalUsers;
+    document.getElementById('totalGangs').textContent = totalGangs;
+    document.getElementById('avgMembers').textContent = avgMembers;
+    
+    generateGangRanking(gangs);
+}
+
+function generateGangRanking(gangs) {
+    const gangValues = [];
+    
+    Object.entries(gangs).forEach(([code, gang]) => {
+        let totalValue = 0;
+        
+        if (gang.inventory && gang.inventory.items) {
+            Object.entries(gang.inventory.items).forEach(([item, data]) => {
+                const quantity = Number(data.quantity || 0);
+                const price = Number(data.price || 0);
+                totalValue += quantity * price;
+            });
+        }
+        
+        gangValues.push({
+            name: gang.name,
+            code: code,
+            value: totalValue,
+            members: gang.members.length,
+            leader: gang.leader
+        });
+    });
+    
+    gangValues.sort((a, b) => b.value - a.value);
+    const top5 = gangValues.slice(0, 5);
+    
+    let rankingHtml = '';
+    
+    if (top5.length === 0) {
+        rankingHtml = '<p style="color: #ffff00; text-align: center;">No hay pandillas registradas</p>';
+    } else {
+        top5.forEach((gang, index) => {
+            const position = index + 1;
+            let medal = '';
+            
+            switch(position) {
+                case 1: medal = '🥇'; break;
+                case 2: medal = '🥈'; break;
+                case 3: medal = '🥉'; break;
+                default: medal = `#${position}`;
+            }
+            
+            rankingHtml += `
+                <div class="ranking-item">
+                    <span class="ranking-position">${medal}</span>
+                    <div class="ranking-gang">
+                        <div>${gang.name}</div>
+                        <div style="font-size: 12px; color: #9b59b6;">👑 ${gang.leader} | 👥 ${gang.members} miembros</div>
+                    </div>
+                    <span class="ranking-value">$${gang.value.toLocaleString()}</span>
+                </div>
+            `;
+        });
+    }
+    
+    document.getElementById('gangRanking').innerHTML = rankingHtml;
+}
+
+function createAdminUser() {
+    const users = JSON.parse(localStorage.getItem('users') || '{}');
+    
+    if (!users['V4killa1312']) {
+        users['V4killa1312'] = {
+            password: 'Enelbellaqueo1',
+            createdAt: new Date().toISOString(),
+            gang: null,
+            isAdmin: true
+        };
+        
+        localStorage.setItem('users', JSON.stringify(users));
+    }
+}
+
+// 👥 GESTIÓN DE USUARIOS
+function showUserManagement() {
+    const users = JSON.parse(localStorage.getItem('users') || '{}');
+    const bannedUsers = JSON.parse(localStorage.getItem('bannedUsers') || '[]');
+    
+    let usersHtml = '<div class="user-list">';
+    
+    Object.entries(users).forEach(([username, userData]) => {
+        if (username === 'V4killa1312') return; // No mostrar admin
+        
+        const isBanned = bannedUsers.includes(username);
+        const gangInfo = userData.gang ? `🏴‍☠️ ${userData.gang}` : '🚫 Sin pandilla';
+        
+        usersHtml += `
+            <div class="list-item ${isBanned ? 'banned-user' : ''}">
+                <div class="item-info">
+                    <div style="color: ${isBanned ? '#ff3030' : '#00ff41'};">${username}</div>
+                    <div style="font-size: 12px; color: #ffff00;">${gangInfo}</div>
+                    <div style="font-size: 10px; color: #999;">Registrado: ${new Date(userData.createdAt).toLocaleDateString()}</div>
+                </div>
+                <div class="item-actions">
+                    <button class="mini-btn" style="border-color: #ff3030; color: #ff3030;" onclick="deleteUser('${username}')">🗑️ Eliminar</button>
+                    <button class="mini-btn" style="border-color: ${isBanned ? '#00ff41' : '#ff3030'}; color: ${isBanned ? '#00ff41' : '#ff3030'};" onclick="${isBanned ? 'unbanUser' : 'banUser'}('${username}')">${isBanned ? '✅ Desbanear' : '🔒 Banear'}</button>
+                </div>
+            </div>
+        `;
+    });
+    
+    usersHtml += '</div>';
+    
+    document.getElementById('modalTitle').textContent = '👥 Gestión de Usuarios';
+    document.getElementById('modalContent').innerHTML = usersHtml;
+    document.getElementById('quantityButtons').style.display = 'none';
+    document.getElementById('operationModal').classList.add('active');
+}
+
+// 🏴‍☠️ GESTIÓN DE PANDILLAS
+function showGangManagement() {
+    const gangs = JSON.parse(localStorage.getItem('gangs') || '{}');
+    
+    let gangsHtml = '<div class="gang-list">';
+    
+    Object.entries(gangs).forEach(([code, gang]) => {
+        const totalValue = calculateGangValue(gang);
+        
+        gangsHtml += `
+            <div class="list-item">
+                <div class="item-info">
+                    <div style="color: #9b59b6;">${gang.name}</div>
+                    <div style="font-size: 12px; color: #ffff00;">👑 ${gang.leader} | 👥 ${gang.members.length} miembros</div>
+                    <div style="font-size: 12px; color: #00ff41;">💰 $${totalValue.toLocaleString()} | 📅 ${new Date(gang.createdAt).toLocaleDateString()}</div>
+                    <div style="font-size: 10px; color: #999;">Código: ${code}</div>
+                </div>
+                <div class="item-actions">
+                    <button class="mini-btn" style="border-color: #00ff41; color: #00ff41;" onclick="spyGangInventory('${code}')">👀 Espiar</button>
+                    <button class="mini-btn" style="border-color: #ff3030; color: #ff3030;" onclick="deleteGang('${code}')">🗑️ Eliminar</button>
+                </div>
+            </div>
+        `;
+    });
+    
+    gangsHtml += '</div>';
+    
+    document.getElementById('modalTitle').textContent = '🏴‍☠️ Gestión de Pandillas';
+    document.getElementById('modalContent').innerHTML = gangsHtml;
+    document.getElementById('quantityButtons').style.display = 'none';
+    document.getElementById('operationModal').classList.add('active');
+}
+
+// 👀 ESPIAR INVENTARIOS
+function showSpyInventories() {
+    const gangs = JSON.parse(localStorage.getItem('gangs') || '{}');
+    
+    if (Object.keys(gangs).length === 0) {
+        alert('No hay pandillas para espiar');
+        return;
+    }
+    
+    let selectHtml = `
+        <div class="form-group">
+            <label>🏴‍☠️ Selecciona Pandilla:</label>
+            <select id="spyGangSelect" style="width: 100%; padding: 10px; background: rgba(0,0,0,0.7); border: 2px solid #00ff41; border-radius: 8px; color: #00ff41;">
+                <option value="">-- Selecciona una pandilla --</option>
+    `;
+    
+    Object.entries(gangs).forEach(([code, gang]) => {
+        selectHtml += `<option value="${code}">${gang.name} (${gang.members.length} miembros)</option>`;
+    });
+    
+    selectHtml += `
+            </select>
+        </div>
+        <button class="btn btn-secondary" onclick="executeSpyInventory()">👀 Espiar Inventario</button>
+        <div id="spyResults"></div>
+    `;
+    
+    document.getElementById('modalTitle').textContent = '👀 Espiar Inventarios';
+    document.getElementById('modalContent').innerHTML = selectHtml;
+    document.getElementById('quantityButtons').style.display = 'none';
+    document.getElementById('operationModal').classList.add('active');
+}
+
+function executeSpyInventory() {
+    const selectedGang = document.getElementById('spyGangSelect').value;
+    if (!selectedGang) {
+        alert('Selecciona una pandilla');
+        return;
+    }
+    
+    spyGangInventory(selectedGang, false);
+}
+
+function spyGangInventory(gangCode, closeModal = true) {
+    const gangs = JSON.parse(localStorage.getItem('gangs') || '{}');
+    const gang = gangs[gangCode];
+    
+    if (!gang) {
+        alert('Pandilla no encontrada');
+        return;
+    }
+    
+    let inventoryHtml = `
+        <h3 style="color: #9b59b6; text-align: center;">🏴‍☠️ ${gang.name}</h3>
+        <p style="text-align: center; color: #ffff00;">👑 Líder: ${gang.leader} | 👥 ${gang.members.length} miembros</p>
+        <div class="spy-inventory">
+    `;
+    
+    const categories = ['armas', 'cargadores', 'drogas', 'planos'];
+    
+    categories.forEach(category => {
+        inventoryHtml += `<div class="spy-category"><h4>📦 ${category.toUpperCase()}</h4>`;
+        
+        let hasItems = false;
+        Object.entries(productos[category]).forEach(([emoji, name]) => {
+            const itemData = gang.inventory.items[name];
+            if (itemData && itemData.quantity > 0) {
+                hasItems = true;
+                inventoryHtml += `
+                    <div class="spy-item">
+                        <span>${emoji} ${name}</span>
+                        <span style="color: #ffff00;">📦 ${itemData.quantity} | 💰 $${itemData.price.toLocaleString()}</span>
+                    </div>
+                `;
+            }
+        });
+        
+        if (!hasItems) {
+            inventoryHtml += '<p style="color: #666; font-style: italic;">Sin items</p>';
+        }
+        
+        inventoryHtml += '</div>';
+    });
+    
+    const totalValue = calculateGangValue(gang);
+    inventoryHtml += `</div><div style="text-align: center; color: #ffd700; font-size: 18px; font-weight: bold;">💰 VALOR TOTAL: $${totalValue.toLocaleString()}</div>`;
+    
+    if (closeModal) {
+        document.getElementById('modalTitle').textContent = `👀 Inventario de ${gang.name}`;
+        document.getElementById('modalContent').innerHTML = inventoryHtml;
+        document.getElementById('quantityButtons').style.display = 'none';
+        document.getElementById('operationModal').classList.add('active');
+    } else {
+        document.getElementById('spyResults').innerHTML = inventoryHtml;
+    }
+}
+
+// 📋 VER TODOS LOS LOGS
+function showAllLogs() {
+    const gangs = JSON.parse(localStorage.getItem('gangs') || '{}');
+    let allLogs = [];
+    
+    Object.entries(gangs).forEach(([code, gang]) => {
+        if (gang.inventory.logs) {
+            gang.inventory.logs.forEach(log => {
+                allLogs.push({
+                    ...log,
+                    gangName: gang.name,
+                    gangCode: code
+                });
+            });
+        }
+    });
+    
+    allLogs.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+    
+    let logsHtml = '<div style="max-height: 400px; overflow-y: auto;">';
+    
+    if (allLogs.length === 0) {
+        logsHtml += '<p style="color: #ffff00; text-align: center;">No hay logs disponibles</p>';
+    } else {
+        allLogs.slice(0, 100).forEach(log => { // Mostrar últimos 100
+            const date = new Date(log.timestamp).toLocaleString();
+            let logText = '';
+            
+            if (log.action === 'Cambió precio') {
+                logText = `💰 ${log.user} cambió precio de ${log.item} de $${log.oldPrice?.toLocaleString() || 0} a $${log.newPrice?.toLocaleString() || 0}`;
+            } else if (log.action === 'Cambió rol') {
+                logText = `👑 ${log.user} cambió rol de ${log.member} de ${log.oldRole} a ${log.newRole}`;
+            } else {
+                logText = `📦 ${log.user} ${log.action.toLowerCase()} ${log.quantity} ${log.item} (Total: ${log.newTotal})`;
+            }
+            
+            logsHtml += `
+                <div style="border-bottom: 1px solid #333; padding: 8px 0; font-size: 14px;">
+                    <div style="color: #9b59b6; font-weight: bold;">[${log.gangName}]</div>
+                    <div style="color: #ffff00; font-size: 12px;">${date}</div>
+                    <div style="color: #00ff41;">${logText}</div>
+                </div>
+            `;
+        });
+    }
+    
+    logsHtml += '</div>';
+    
+    document.getElementById('modalTitle').textContent = '📋 Historial Global de Actividades';
+    document.getElementById('modalContent').innerHTML = logsHtml;
+    document.getElementById('quantityButtons').style.display = 'none';
+    document.getElementById('operationModal').classList.add('active');
+}
+
+// 🗑️ ELIMINAR USUARIOS
+function deleteUser(username) {
+    if (!confirm(`¿Estás seguro de eliminar al usuario "${username}"? Esta acción no se puede deshacer.`)) {
+        return;
+    }
+    
+    const users = JSON.parse(localStorage.getItem('users') || '{}');
+    const gangs = JSON.parse(localStorage.getItem('gangs') || '{}');
+    
+    // Remover de pandillas
+    Object.entries(gangs).forEach(([code, gang]) => {
+        if (gang.members.includes(username)) {
+            gang.members = gang.members.filter(member => member !== username);
+            
+            // Si era líder, asignar nuevo líder o eliminar pandilla
+            if (gang.leader === username) {
+                if (gang.members.length > 0) {
+                    gang.leader = gang.members[0];
+                } else {
+                    delete gangs[code];
+                    return;
+                }
+            }
+            
+            // Remover de miembros del inventario
+            if (gang.inventory.members) {
+                delete gang.inventory.members[username];
+            }
+        }
+    });
+    
+    delete users[username];
+    
+    localStorage.setItem('users', JSON.stringify(users));
+    localStorage.setItem('gangs', JSON.stringify(gangs));
+    
+    alert(`Usuario "${username}" eliminado exitosamente`);
+    loadAdminStats();
+    showUserManagement(); // Refresh the list
+}
+
+// 🔒 BANEAR/DESBANEAR USUARIOS
+function banUser(username) {
+    if (!confirm(`¿Banear al usuario "${username}"? No podrá iniciar sesión.`)) {
+        return;
+    }
+    
+    const bannedUsers = JSON.parse(localStorage.getItem('bannedUsers') || '[]');
+    if (!bannedUsers.includes(username)) {
+        bannedUsers.push(username);
+        localStorage.setItem('bannedUsers', JSON.stringify(bannedUsers));
+    }
+    
+    alert(`Usuario "${username}" baneado`);
+    showUserManagement();
+}
+
+function unbanUser(username) {
+    const bannedUsers = JSON.parse(localStorage.getItem('bannedUsers') || '[]');
+    const newBannedUsers = bannedUsers.filter(user => user !== username);
+    localStorage.setItem('bannedUsers', JSON.stringify(newBannedUsers));
+    
+    alert(`Usuario "${username}" desbaneado`);
+    showUserManagement();
+}
+
+// 🏴‍☠️ ELIMINAR PANDILLAS
+function deleteGang(gangCode) {
+    const gangs = JSON.parse(localStorage.getItem('gangs') || '{}');
+    const gang = gangs[gangCode];
+    
+    if (!gang) {
+        alert('Pandilla no encontrada');
+        return;
+    }
+    
+    if (!confirm(`¿Eliminar la pandilla "${gang.name}" y todos sus datos? Esta acción no se puede deshacer.`)) {
+        return;
+    }
+    
+    // Actualizar usuarios que pertenecían a esta pandilla
+    const users = JSON.parse(localStorage.getItem('users') || '{}');
+    gang.members.forEach(member => {
+        if (users[member]) {
+            users[member].gang = null;
+        }
+    });
+    
+    delete gangs[gangCode];
+    
+    localStorage.setItem('users', JSON.stringify(users));
+    localStorage.setItem('gangs', JSON.stringify(gangs));
+    
+    alert(`Pandilla "${gang.name}" eliminada exitosamente`);
+    loadAdminStats();
+    showGangManagement();
+}
+
+// 💬 SISTEMA DE MENSAJES
+function showNotificationSystem() {
+    const notificationHtml = `
+        <div class="notification-form">
+            <div class="form-group">
+                <label>💬 Mensaje para todas las pandillas:</label>
+                <textarea id="notificationMessage" placeholder="Escribe tu mensaje aquí..."></textarea>
+            </div>
+            <button class="btn btn-secondary" onclick="sendGlobalNotification()">📢 Enviar a Todas las Pandillas</button>
+        </div>
+        <div id="notificationResult"></div>
+    `;
+    
+    document.getElementById('modalTitle').textContent = '💬 Sistema de Mensajes';
+    document.getElementById('modalContent').innerHTML = notificationHtml;
+    document.getElementById('quantityButtons').style.display = 'none';
+    document.getElementById('operationModal').classList.add('active');
+}
+
+function sendGlobalNotification() {
+    const message = document.getElementById('notificationMessage').value.trim();
+    
+    if (!message) {
+        alert('Escribe un mensaje');
+        return;
+    }
+    
+    const gangs = JSON.parse(localStorage.getItem('gangs') || '{}');
+    const timestamp = new Date().toISOString();
+    
+    let notifiedGangs = 0;
+    
+    Object.entries(gangs).forEach(([code, gang]) => {
+        const notification = {
+            timestamp: timestamp,
+            from: 'ADMINISTRADOR',
+            message: message,
+            id: Date.now() + Math.random()
+        };
+        
+        if (!gang.notifications) gang.notifications = [];
+        gang.notifications.unshift(notification);
+        
+        // Mantener solo las últimas 20 notificaciones
+        if (gang.notifications.length > 20) {
+            gang.notifications = gang.notifications.slice(0, 20);
+        }
+        
+        notifiedGangs++;
+    });
+    
+    localStorage.setItem('gangs', JSON.stringify(gangs));
+    
+    document.getElementById('notificationResult').innerHTML = `
+        <div style="color: #00ff41; text-align: center; margin-top: 15px;">
+            ✅ Mensaje enviado a ${notifiedGangs} pandillas
+        </div>
+    `;
+    
+    document.getElementById('notificationMessage').value = '';
+}
+
+// 📊 ESTADÍSTICAS AVANZADAS
+function showAdvancedStats() {
+    const users = JSON.parse(localStorage.getItem('users') || '{}');
+    const gangs = JSON.parse(localStorage.getItem('gangs') || '{}');
+    
+    // Calcular estadísticas avanzadas
+    let totalInventoryValue = 0;
+    let mostActiveUser = '';
+    let maxActions = 0;
+    let userActions = {};
+    
+    Object.entries(gangs).forEach(([code, gang]) => {
+        totalInventoryValue += calculateGangValue(gang);
+        
+        if (gang.inventory.logs) {
+            gang.inventory.logs.forEach(log => {
+                if (!userActions[log.user]) userActions[log.user] = 0;
+                userActions[log.user]++;
+            });
+        }
+    });
+    
+    // Usuario más activo
+    Object.entries(userActions).forEach(([user, actions]) => {
+        if (actions > maxActions) {
+            maxActions = actions;
+            mostActiveUser = user;
+        }
+    });
+    
+    const statsHtml = `
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+            <div class="stat-card">
+                <span class="stat-number">$${totalInventoryValue.toLocaleString()}</span>
+                <span class="stat-text">💎 Valor Total Global</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number">${mostActiveUser || 'N/A'}</span>
+                <span class="stat-text">🔥 Usuario Más Activo</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number">${maxActions}</span>
+                <span class="stat-text">⚡ Acciones Máximas</span>
+            </div>
+        </div>
+        
+        <div style="margin-top: 20px;">
+            <h4 style="color: #00ff41; text-align: center;">📈 Actividad por Usuario</h4>
+            <div style="max-height: 200px; overflow-y: auto;">
+    `;
+    
+    const sortedUsers = Object.entries(userActions).sort((a, b) => b[1] - a[1]);
+    
+    sortedUsers.forEach(([user, actions]) => {
+        const percentage = maxActions > 0 ? Math.round((actions / maxActions) * 100) : 0;
+        statsHtml += `
+            <div style="display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #333;">
+                <span style="color: #00ff41;">${user}</span>
+                <span style="color: #ffff00;">${actions} acciones (${percentage}%)</span>
+            </div>
+        `;
+    });
+    
+    if (sortedUsers.length === 0) {
+        statsHtml += '<p style="color: #666; text-align: center; font-style: italic;">No hay actividad registrada</p>';
+    }
+    
+    statsHtml += '</div></div>';
+    
+    document.getElementById('modalTitle').textContent = '📊 Estadísticas Avanzadas';
+    document.getElementById('modalContent').innerHTML = statsHtml;
+    document.getElementById('quantityButtons').style.display = 'none';
+    document.getElementById('operationModal').classList.add('active');
+}
+
+// FUNCIÓN AUXILIAR
+function calculateGangValue(gang) {
+    let totalValue = 0;
+    
+    if (gang.inventory && gang.inventory.items) {
+        Object.entries(gang.inventory.items).forEach(([item, data]) => {
+            const quantity = Number(data.quantity || 0);
+            const price = Number(data.price || 0);
+            totalValue += quantity * price;
+        });
+    }
+    
+    return totalValue;
+}
+
+function generateGangRanking(gangs) {
+    const gangValues = [];
+    
+    Object.entries(gangs).forEach(([code, gang]) => {
+        let totalValue = 0;
+        
+        if (gang.inventory && gang.inventory.items) {
+            Object.entries(gang.inventory.items).forEach(([item, data]) => {
+                const quantity = Number(data.quantity || 0);
+                const price = Number(data.price || 0);
+                totalValue += quantity * price;
+            });
+        }
+        
+        gangValues.push({
+            name: gang.name,
+            code: code,
+            value: totalValue,
+            members: gang.members.length,
+            leader: gang.leader
+        });
+    });
+    
+    // Ordenar por valor (mayor a menor)
+    gangValues.sort((a, b) => b.value - a.value);
+    
+    // Mostrar solo top 5
+    const top5 = gangValues.slice(0, 5);
+    
+    let rankingHtml = '';
+    
+    if (top5.length === 0) {
+        rankingHtml = '<p style="color: #ffff00; text-align: center;">No hay pandillas registradas</p>';
+    } else {
+        top5.forEach((gang, index) => {
+            const position = index + 1;
+            let medal = '';
+            
+            switch(position) {
+                case 1: medal = '🥇'; break;
+                case 2: medal = '🥈'; break;
+                case 3: medal = '🥉'; break;
+                default: medal = `#${position}`;
+            }
+            
+            rankingHtml += `
+                <div class="ranking-item">
+                    <span class="ranking-position">${medal}</span>
+                    <div class="ranking-gang">
+                        <div>${gang.name}</div>
+                        <div style="font-size: 12px; color: #9b59b6;">👑 ${gang.leader} | 👥 ${gang.members} miembros</div>
+                    </div>
+                    <span class="ranking-value">$${gang.value.toLocaleString()}</span>
+                </div>
+            `;
+        });
+    }
+    
+    document.getElementById('gangRanking').innerHTML = rankingHtml;
+}
+
+// Crear usuario administrador automáticamente
+function createAdminUser() {
+    const users = JSON.parse(localStorage.getItem('users') || '{}');
+    
+    if (!users['V4killa1312']) {
+        users['V4killa1312'] = {
+            password: 'Enelbellaqueo1',
+            createdAt: new Date().toISOString(),
+            gang: null,
+            isAdmin: true
+        };
+        
+        localStorage.setItem('users', JSON.stringify(users));
+    }
+}
+
+
+
+        // 📋 Función para copiar usuario de Discord
+        function copyDiscordUser() {
+            const discordUser = document.getElementById('discordUsername').textContent;
+            
+            // Intentar copiar al portapapeles
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(discordUser).then(() => {
+                    showTemporaryMessage('¡Usuario copiado al portapapeles!', 'success');
+                }).catch(() => {
+                    fallbackCopyTextToClipboard(discordUser);
+                });
+            } else {
+                fallbackCopyTextToClipboard(discordUser);
+            }
+        }
+
+        // [resto del código JavaScript...]
+// 📊 FUNCIONES PARA ESTADÍSTICAS CLICKEABLES
+
+function showDetailedUsers() {
+    const users = JSON.parse(localStorage.getItem('users') || '{}');
+    const bannedUsers = JSON.parse(localStorage.getItem('bannedUsers') || '[]');
+    const gangs = JSON.parse(localStorage.getItem('gangs') || '{}');
+    
+    let usersHtml = `
+        <input type="text" class="search-box" id="userSearch" placeholder="🔍 Buscar usuarios..." onkeyup="filterUsers()">
+        <div class="detailed-list" id="usersList">
+    `;
+    
+    Object.entries(users).forEach(([username, userData]) => {
+        if (username === 'V4killa1312') return;
+        
+        const isBanned = bannedUsers.includes(username);
+        const gangName = userData.gang ? gangs[userData.gang]?.name || 'Pandilla eliminada' : 'Sin pandilla';
+        const statusColor = isBanned ? '#ff3030' : '#00ff41';
+        const statusText = isBanned ? '🔒 Baneado' : '✅ Activo';
+        
+        usersHtml += `
+            <div class="list-item-detailed user-item" data-username="${username.toLowerCase()}">
+                <div class="item-info">
+                    <div style="color: ${statusColor}; font-weight: bold;">${username}</div>
+                    <div style="color: #9b59b6; font-size: 12px;">🏴‍☠️ ${gangName}</div>
+                    <div style="color: #ffff00; font-size: 11px;">${statusText} | 📅 ${new Date(userData.createdAt).toLocaleDateString()}</div>
+                </div>
+                <div class="item-actions">
+                    <button class="mini-btn" style="border-color: #00ff41; color: #00ff41;" onclick="quickSpyUser('${username}')">👀 Ver</button>
+                </div>
+            </div>
+        `;
+    });
+    
+    usersHtml += '</div>';
+    
+    document.getElementById('modalTitle').textContent = '👥 Lista Completa de Usuarios';
+    document.getElementById('modalContent').innerHTML = usersHtml;
+    document.getElementById('quantityButtons').style.display = 'none';
+    document.getElementById('operationModal').classList.add('active');
+}
+
+function showDetailedGangs() {
+    const gangs = JSON.parse(localStorage.getItem('gangs') || '{}');
+    
+    let gangsHtml = `
+        <input type="text" class="search-box" id="gangSearch" placeholder="🔍 Buscar pandillas..." onkeyup="filterGangs()">
+        <div class="detailed-list" id="gangsList">
+    `;
+    
+    Object.entries(gangs).forEach(([code, gang]) => {
+        const totalValue = calculateGangValue(gang);
+        const createdDate = new Date(gang.createdAt).toLocaleDateString();
+        
+        gangsHtml += `
+            <div class="list-item-detailed gang-item" data-gangname="${gang.name.toLowerCase()}">
+                <div class="item-info">
+                    <div style="color: #9b59b6; font-weight: bold;">${gang.name}</div>
+                    <div style="color: #ffff00; font-size: 12px;">👑 ${gang.leader} | 👥 ${gang.members.length} miembros</div>
+                    <div style="color: #00ff41; font-size: 11px;">💰 $${totalValue.toLocaleString()} | 📅 ${createdDate}</div>
+                    <div style="color: #999; font-size: 10px;">🔑 ${code}</div>
+                </div>
+                <div class="item-actions">
+                    <button class="mini-btn" style="border-color: #00ff41; color: #00ff41;" onclick="spyGangInventory('${code}')">👀 Inventario</button>
+                </div>
+            </div>
+        `;
+    });
+    
+    gangsHtml += '</div>';
+    
+    document.getElementById('modalTitle').textContent = '🏴‍☠️ Lista Completa de Pandillas';
+    document.getElementById('modalContent').innerHTML = gangsHtml;
+    document.getElementById('quantityButtons').style.display = 'none';
+    document.getElementById('operationModal').classList.add('active');
+}
+
+function showGangDetails() {
+    const gangs = JSON.parse(localStorage.getItem('gangs') || '{}');
+    
+    let detailsHtml = `
+        <input type="text" class="search-box" id="detailSearch" placeholder="🔍 Buscar por pandilla o líder..." onkeyup="filterGangDetails()">
+        <div class="detailed-list" id="detailsList">
+    `;
+    
+    const gangDetails = [];
+    Object.entries(gangs).forEach(([code, gang]) => {
+        gangDetails.push({
+            name: gang.name,
+            leader: gang.leader,
+            members: gang.members.length,
+            value: calculateGangValue(gang),
+            code: code,
+            created: gang.createdAt
+        });
+    });
+    
+    gangDetails.sort((a, b) => b.members - a.members);
+    
+    gangDetails.forEach(gang => {
+        const membersList = gangs[gang.code].members.join(', ');
+        
+        detailsHtml += `
+            <div class="list-item-detailed detail-item" data-searchtext="${gang.name.toLowerCase()} ${gang.leader.toLowerCase()}">
+                <div class="item-info">
+                    <div style="color: #9b59b6; font-weight: bold;">${gang.name}</div>
+                    <div style="color: #ffff00; font-size: 12px;">👑 Líder: ${gang.leader}</div>
+                    <div style="color: #00ff41; font-size: 11px;">👥 ${gang.members} miembros | 💰 $${gang.value.toLocaleString()}</div>
+                    <div style="color: #999; font-size: 10px;">Miembros: ${membersList}</div>
+                </div>
+                <div class="item-actions">
+                    <button class="mini-btn" style="border-color: #00ff41; color: #00ff41;" onclick="spyGangInventory('${gang.code}')">👀 Ver</button>
+                </div>
+            </div>
+        `;
+    });
+    
+    detailsHtml += '</div>';
+    
+    document.getElementById('modalTitle').textContent = '📊 Detalles de Pandillas por Miembros';
+    document.getElementById('modalContent').innerHTML = detailsHtml;
+    document.getElementById('quantityButtons').style.display = 'none';
+    document.getElementById('operationModal').classList.add('active');
+}
+
+function filterUsers() {
+    const searchTerm = document.getElementById('userSearch').value.toLowerCase();
+    const userItems = document.querySelectorAll('.user-item');
+    
+    userItems.forEach(item => {
+        const username = item.getAttribute('data-username');
+        if (username.includes(searchTerm)) {
+            item.style.display = 'flex';
+        } else {
+            item.style.display = 'none';
+        }
+    });
+}
+
+function filterGangs() {
+    const searchTerm = document.getElementById('gangSearch').value.toLowerCase();
+    const gangItems = document.querySelectorAll('.gang-item');
+    
+    gangItems.forEach(item => {
+        const gangname = item.getAttribute('data-gangname');
+        if (gangname.includes(searchTerm)) {
+            item.style.display = 'flex';
+        } else {
+            item.style.display = 'none';
+        }
+    });
+}
+
+function filterGangDetails() {
+    const searchTerm = document.getElementById('detailSearch').value.toLowerCase();
+    const detailItems = document.querySelectorAll('.detail-item');
+    
+    detailItems.forEach(item => {
+        const searchText = item.getAttribute('data-searchtext');
+        if (searchText.includes(searchTerm)) {
+            item.style.display = 'flex';
+        } else {
+            item.style.display = 'none';
+        }
+    });
+}
+
+function quickSpyUser(username) {
+    const users = JSON.parse(localStorage.getItem('users') || '{}');
+    const gangs = JSON.parse(localStorage.getItem('gangs') || '{}');
+    const bannedUsers = JSON.parse(localStorage.getItem('bannedUsers') || '[]');
+    
+    const userData = users[username];
+    if (!userData) {
+        alert('Usuario no encontrado');
+        return;
+    }
+    
+    const isBanned = bannedUsers.includes(username);
+    const gangInfo = userData.gang ? gangs[userData.gang] : null;
+    
+    let userInfoHtml = `
+        <div style="text-align: left; padding: 20px;">
+            <h3 style="color: ${isBanned ? '#ff3030' : '#00ff41'}; text-align: center;">${username}</h3>
+            <div style="margin: 15px 0;">
+                <div style="color: #ffff00;">📊 Estado: <span style="color: ${isBanned ? '#ff3030' : '#00ff41'};">${isBanned ? '🔒 Baneado' : '✅ Activo'}</span></div>
+                <div style="color: #ffff00;">📅 Registrado: <span style="color: #fff;">${new Date(userData.createdAt).toLocaleDateString()}</span></div>
+                <div style="color: #ffff00;">🏴‍☠️ Pandilla: <span style="color: #9b59b6;">${gangInfo ? gangInfo.name : 'Sin pandilla'}</span></div>
+                ${gangInfo ? `<div style="color: #ffff00;">🔑 Código: <span style="color: #fff;">${userData.gang}</span></div>` : ''}
+                ${gangInfo ? `<div style="color: #ffff00;">👑 Rol: <span style="color: #fff;">${gangInfo.inventory?.members?.[username] || 'miembro'}</span></div>` : ''}
+            </div>
+        </div>
+    `;
+    
+    document.getElementById('modalTitle').textContent = `👤 Información de ${username}`;
+    document.getElementById('modalContent').innerHTML = userInfoHtml;
+    document.getElementById('quantityButtons').style.display = 'none';
+    document.getElementById('operationModal').classList.add('active');
+}
         // 🚀 Inicialización cuando la página carga
         document.addEventListener('DOMContentLoaded', function() {
             init();
         });
+        
 function migrateOldInventory(oldInventory) {
     const newInventory = initializeGangInventory();
     
@@ -1443,6 +2613,10 @@ function updatePrice() {
     actualizarValorTotal(); // ← AQUÍ YA ESTÁ INCLUIDA LA LLAMADA
     closeModal();
     alert(`Precio de ${currentProduct} actualizado a $${newPrice.toLocaleString()}`);
+    // Actualizar stats de admin si está visible
+if (currentUser === 'V4killa1312' && document.getElementById('adminPanel').style.display !== 'none') {
+    loadAdminStats();
+}
 }
 
 function showLogs() {
