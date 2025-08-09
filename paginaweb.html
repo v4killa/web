@@ -1,0 +1,1567 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GTA RP - Inventory Manager</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 50%, #2d1b69 100%);
+            color: #00ff41;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 15px;
+            border: 2px solid #00ff41;
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.3);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            color: #00ff41;
+            text-shadow: 0 0 10px rgba(0, 255, 65, 0.5);
+            margin-bottom: 10px;
+        }
+
+        .header .subtitle {
+            color: #ffff00;
+            font-size: 1.2rem;
+        }
+
+        /* Auth Section */
+        .auth-section {
+            background: rgba(0, 0, 0, 0.9);
+            padding: 30px;
+            border-radius: 15px;
+            border: 2px solid #ff6b35;
+            box-shadow: 0 0 20px rgba(255, 107, 53, 0.3);
+            margin-bottom: 20px;
+        }
+
+        .auth-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            padding: 10px 20px;
+            background: rgba(255, 107, 53, 0.2);
+            border: 2px solid #ff6b35;
+            color: #ff6b35;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+
+        .tab-btn.active {
+            background: #ff6b35;
+            color: #000;
+            box-shadow: 0 0 15px rgba(255, 107, 53, 0.5);
+        }
+
+        .auth-form {
+            display: none;
+        }
+
+        .auth-form.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #00ff41;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid #00ff41;
+            border-radius: 8px;
+            color: #00ff41;
+            font-size: 16px;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #ffff00;
+            box-shadow: 0 0 10px rgba(255, 255, 0, 0.3);
+        }
+
+        .btn {
+            padding: 12px 25px;
+            background: linear-gradient(45deg, #ff6b35, #f7931e);
+            border: none;
+            border-radius: 8px;
+            color: #000;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 16px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 107, 53, 0.4);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(45deg, #00ff41, #00cc33);
+        }
+
+        .btn-danger {
+            background: linear-gradient(45deg, #ff3030, #cc0000);
+        }
+
+        /* Main App */
+        .main-app {
+            display: none;
+        }
+
+        .main-app.active {
+            display: block;
+        }
+
+        .user-info {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px solid #00ff41;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .user-info h3 {
+            color: #ffff00;
+        }
+
+        /* Gang Section */
+        .gang-section {
+            background: rgba(0, 0, 0, 0.9);
+            padding: 20px;
+            border-radius: 15px;
+            border: 2px solid #9b59b6;
+            box-shadow: 0 0 20px rgba(155, 89, 182, 0.3);
+            margin-bottom: 20px;
+        }
+
+        .gang-section h2 {
+            color: #9b59b6;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .gang-controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+/* NUEVO: Estilos para valor total */
+.valor-total {
+    background: rgba(255, 215, 0, 0.1);
+    border: 2px solid #ffd700;
+    border-radius: 10px;
+    padding: 15px;
+    margin-top: 15px;
+    text-align: center;
+    animation: pulse-gold 2s infinite;
+}
+
+.valor-total h4 {
+    color: #ffd700;
+    font-size: 1.2rem;
+    margin-bottom: 5px;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+}
+
+.valor-total .monto {
+    color: #ffff00;
+    font-size: 1.8rem;
+    font-weight: bold;
+    text-shadow: 0 0 15px rgba(255, 255, 0, 0.7);
+}
+
+@keyframes pulse-gold {
+    0%, 100% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.3); }
+    50% { box-shadow: 0 0 30px rgba(255, 215, 0, 0.6); }
+}
+        /* Inventory Section */
+        .inventory-section {
+            background: rgba(0, 0, 0, 0.9);
+            padding: 20px;
+            border-radius: 15px;
+            border: 2px solid #00ff41;
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.3);
+        }
+
+        .inventory-section h2 {
+            color: #00ff41;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .category-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .category-btn {
+            padding: 15px;
+            background: rgba(0, 255, 65, 0.1);
+            border: 2px solid #00ff41;
+            border-radius: 10px;
+            color: #00ff41;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .category-btn:hover {
+            background: rgba(0, 255, 65, 0.2);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 255, 65, 0.3);
+        }
+
+        .category-btn.active {
+            background: #00ff41;
+            color: #000;
+        }
+
+        /* Product Grid */
+        .products-grid {
+            display: none;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .products-grid.active {
+            display: grid;
+        }
+
+        .product-card {
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid #ffff00;
+            border-radius: 10px;
+            padding: 15px;
+            transition: all 0.3s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(255, 255, 0, 0.2);
+        }
+
+        .product-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .product-emoji {
+    font-size: 24px;
+    color: #ff6b35;
+    width: 30px;
+    text-align: center;
+}
+
+.product-emoji i {
+    color: #ff6b35;
+    text-shadow: 0 0 10px rgba(255, 107, 53, 0.5);
+}
+
+        .product-name {
+            color: #ffff00;
+            font-weight: bold;
+        }
+
+        .product-stats {
+            margin-bottom: 15px;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #00ff41;
+        }
+
+        .stat-value {
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .product-actions {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-add {
+            background: #00ff41;
+            color: #000;
+        }
+
+        .btn-remove {
+            background: #ff3030;
+            color: #fff;
+        }
+
+        .btn-price {
+            background: #ffff00;
+            color: #000;
+        }
+
+        /* Stock Status */
+        .stock-normal { border-left: 4px solid #00ff41; }
+        .stock-low { border-left: 4px solid #ffff00; }
+        .stock-empty { border-left: 4px solid #ff3030; }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: rgba(0, 0, 0, 0.95);
+            border: 2px solid #00ff41;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+        }
+
+        .modal h3 {
+            color: #00ff41;
+            margin-bottom: 20px;
+        }
+
+        .quantity-buttons {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .qty-btn {
+            padding: 15px;
+            background: rgba(255, 107, 53, 0.2);
+            border: 2px solid #ff6b35;
+            border-radius: 8px;
+            color: #ff6b35;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .qty-btn:hover {
+            background: #ff6b35;
+            color: #000;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .category-buttons {
+                grid-template-columns: 1fr;
+            }
+            
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .gang-controls {
+                flex-direction: column;
+            }
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .alert {
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .alert-success {
+            background: rgba(0, 255, 65, 0.2);
+            border: 1px solid #00ff41;
+            color: #00ff41;
+        }
+
+        .alert-error {
+            background: rgba(255, 48, 48, 0.2);
+            border: 1px solid #ff3030;
+            color: #ff3030;
+        }
+
+        .gang-members {
+            background: rgba(155, 89, 182, 0.1);
+            border: 1px solid #9b59b6;
+            border-radius: 8px;
+            padding: 10px;
+            margin-top: 15px;
+        }
+
+        .member-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(155, 89, 182, 0.3);
+        }
+
+        .member-item:last-child {
+            border-bottom: none;
+        }
+
+        .member-info {
+            color: #9b59b6;
+        }
+
+        .member-role {
+            color: #ffff00;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🎮 GTA RP INVENTORY</h1>
+            <div class="subtitle">Sistema de Gestión de Inventarios</div>
+        </div>
+
+        <!-- Auth Section -->
+        <div class="auth-section" id="authSection">
+            <div class="auth-tabs">
+                <div class="tab-btn active" onclick="switchAuthTab('login')">🔐 Iniciar Sesión</div>
+                <div class="tab-btn" onclick="switchAuthTab('register')">📝 Registrarse</div>
+            </div>
+
+            <!-- Login Form -->
+            <div class="auth-form active" id="loginForm">
+                <div id="loginAlert"></div>
+                <div class="form-group">
+                    <label>👤 Usuario:</label>
+                    <input type="text" id="loginUsername" placeholder="Ingresa tu usuario">
+                </div>
+                <div class="form-group">
+                    <label>🔑 Contraseña:</label>
+                    <input type="password" id="loginPassword" placeholder="Ingresa tu contraseña">
+                </div>
+                <button class="btn" onclick="loginUser()">🚀 Iniciar Sesión</button>
+            </div>
+
+            <!-- Register Form -->
+            <div class="auth-form" id="registerForm">
+                <div id="registerAlert"></div>
+                <div class="form-group">
+                    <label>👤 Usuario:</label>
+                    <input type="text" id="registerUsername" placeholder="Elige un usuario">
+                </div>
+                <div class="form-group">
+                    <label>🔑 Contraseña:</label>
+                    <input type="password" id="registerPassword" placeholder="Crea una contraseña">
+                </div>
+                <div class="form-group">
+                    <label>🔑 Confirmar Contraseña:</label>
+                    <input type="password" id="confirmPassword" placeholder="Confirma tu contraseña">
+                </div>
+                <button class="btn" onclick="registerUser()">📝 Registrarse</button>
+            </div>
+        </div>
+
+        <!-- Main App -->
+        <div class="main-app" id="mainApp">
+            <!-- User Info -->
+            <div class="user-info">
+                <h3>👋 Bienvenido, <span id="currentUser"></span></h3>
+                <button class="btn btn-danger" onclick="logout()">🚪 Cerrar Sesión</button>
+            </div>
+
+            <!-- Gang Section -->
+            <div class="gang-section">
+                <h2>👥 Sistema de Pandillas</h2>
+                <div class="gang-controls">
+    <button class="btn btn-secondary" onclick="showCreateGangModal()">🏗️ Crear Pandilla</button>
+    <button class="btn btn-secondary" onclick="showJoinGangModal()">🤝 Unirse a Pandilla</button>
+    <button class="btn" onclick="showGangInfo()">📊 Info Pandilla</button>
+    <button class="btn" onclick="showLogs()">📋 Historial</button>
+    <button class="btn" onclick="showMemberManagement()" id="manageMembersBtn" style="display: none;">👥 Gestionar Miembros</button>
+    <button class="btn btn-danger" onclick="leaveGang()" id="leaveGangBtn" style="display: none;">🚪 Salir de Pandilla</button>
+</div>
+                <div id="gangInfo"></div>
+            </div>
+
+            <!-- Inventory Section -->
+            <div class="inventory-section">
+                <h2>📦 Gestión de Inventario</h2>
+                
+                <!-- Category Buttons -->
+                <div class="category-buttons">
+                    <div class="category-btn" onclick="showCategory('armas')">🔫 Armas</div>
+                    <div class="category-btn" onclick="showCategory('cargadores')">📦 Cargadores</div>
+                    <div class="category-btn" onclick="showCategory('drogas')">💊 Drogas</div>
+                    <div class="category-btn" onclick="showCategory('planos')">🗺️ Planos</div>
+                    <div class="category-btn" onclick="showAllStock()">📊 Stock Completo</div>
+                </div>
+
+                <!-- Products Grid - Armas -->
+                <div class="products-grid" id="grid-armas"></div>
+                
+                <!-- Products Grid - Cargadores -->
+                <div class="products-grid" id="grid-cargadores"></div>
+                
+                <!-- Products Grid - Drogas -->
+                <div class="products-grid" id="grid-drogas"></div>
+                
+                <!-- Products Grid - Planos -->
+                <div class="products-grid" id="grid-planos"></div>
+
+                <!-- All Stock Grid -->
+                <div class="products-grid" id="grid-all"></div>
+            </div>
+        </div>
+
+        <!-- Modal for Operations -->
+        <div class="modal" id="operationModal">
+            <div class="modal-content">
+                <h3 id="modalTitle"></h3>
+                <div id="modalContent"></div>
+                <div class="quantity-buttons" id="quantityButtons" style="display: none;">
+                    <div class="qty-btn" onclick="executeOperation(1)">1</div>
+                    <div class="qty-btn" onclick="executeOperation(2)">2</div>
+                    <div class="qty-btn" onclick="executeOperation(3)">3</div>
+                    <div class="qty-btn" onclick="executeOperation(5)">5</div>
+                    <div class="qty-btn" onclick="executeOperation(10)">10</div>
+                    <div class="qty-btn" onclick="executeOperation(25)">25</div>
+                    <div class="qty-btn" onclick="executeOperation(50)">50</div>
+                </div>
+                <button class="btn btn-danger" onclick="closeModal()">❌ Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data Structure
+        const productos = {
+    'armas': { 
+        '<i class="fas fa-gun"></i>': 'glock',           // Pistola moderna (Glock)
+        '<i class="fas fa-hammer"></i>': 'vintage',       // Martillo (arma vintage/antigua)
+        '<i class="fas fa-bullseye"></i>': 'beretta',     // Diana/precisión (Beretta)
+        '<i class="fas fa-skull-crossbones"></i>': 'hachas', // Calavera con huesos (Hachas)
+        '<i class="fas fa-cut"></i>': 'machetes'          // Tijeras/corte (Machetes)
+    },
+    'cargadores': { 
+    '<i class="fas fa-layer-group"></i>': 'cargador pistolas', 
+    '<i class="fas fa-boxes"></i>': 'cargador subfusil' 
+},
+    'drogas': { 
+        '<i class="fas fa-smoking"></i>': 'bongs', 
+        '<i class="fas fa-pills"></i>': 'pcp', 
+        '<i class="fas fa-cookie-bite"></i>': 'galletas', 
+        '<i class="fas fa-syringe"></i>': 'fentanilo', 
+        '<i class="fas fa-cannabis"></i>': 'marihuana' 
+    },
+    'planos': { 
+        '<i class="fas fa-store"></i>': 'supermercado', 
+        '<i class="fas fa-gas-pump"></i>': 'gasolinera', 
+        '<i class="fas fa-gem"></i>': 'joyeria', 
+        '<i class="fas fa-cut"></i>': 'barberia', 
+        '<i class="fas fa-wine-bottle"></i>': 'licoreria', 
+        '<i class="fas fa-prescription-bottle"></i>': 'farmacia', 
+        '<i class="fas fa-drafting-compass"></i>': 'arquitectónico', 
+        '<i class="fas fa-tshirt"></i>': 'ropa', 
+        '<i class="fas fa-paint-brush"></i>': 'tatuajes'
+    }
+};
+
+        // Global variables
+        let currentUser = null;
+        let currentGang = null;
+        let currentOperation = null;
+        let currentProduct = null;
+
+        // Initialize app
+        function init() {
+            loadUserData();
+            checkSession();
+        }
+
+        // Auth Functions
+        function switchAuthTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.auth-form').forEach(form => form.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(tab + 'Form').classList.add('active');
+        }
+
+        function registerUser() {
+            const username = document.getElementById('registerUsername').value.trim();
+            const password = document.getElementById('registerPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            if (!username || !password || !confirmPassword) {
+                showAlert('registerAlert', 'Todos los campos son obligatorios', 'error');
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                showAlert('registerAlert', 'Las contraseñas no coinciden', 'error');
+                return;
+            }
+
+            if (password.length < 4) {
+                showAlert('registerAlert', 'La contraseña debe tener al menos 4 caracteres', 'error');
+                return;
+            }
+
+            const users = JSON.parse(localStorage.getItem('users') || '{}');
+            
+            if (users[username]) {
+                showAlert('registerAlert', 'El usuario ya existe', 'error');
+                return;
+            }
+
+            users[username] = {
+                password: password,
+                createdAt: new Date().toISOString(),
+                gang: null
+            };
+
+            localStorage.setItem('users', JSON.stringify(users));
+            showAlert('registerAlert', '¡Usuario registrado exitosamente!', 'success');
+            
+            setTimeout(() => {
+                switchAuthTab('login');
+            }, 1500);
+        }
+
+        function loginUser() {
+            const username = document.getElementById('loginUsername').value.trim();
+            const password = document.getElementById('loginPassword').value;
+
+            if (!username || !password) {
+                showAlert('loginAlert', 'Ingresa usuario y contraseña', 'error');
+                return;
+            }
+
+            const users = JSON.parse(localStorage.getItem('users') || '{}');
+            
+            if (!users[username] || users[username].password !== password) {
+                showAlert('loginAlert', 'Usuario o contraseña incorrectos', 'error');
+                return;
+            }
+
+            currentUser = username;
+            currentGang = users[username].gang;
+            localStorage.setItem('currentSession', username);
+            
+            showMainApp();
+        }
+
+        function logout() {
+            currentUser = null;
+            currentGang = null;
+            localStorage.removeItem('currentSession');
+            
+            document.getElementById('authSection').style.display = 'block';
+            document.getElementById('mainApp').classList.remove('active');
+            
+            // Clear forms
+            document.getElementById('loginUsername').value = '';
+            document.getElementById('loginPassword').value = '';
+        }
+
+        function checkSession() {
+            const session = localStorage.getItem('currentSession');
+            if (session) {
+                const users = JSON.parse(localStorage.getItem('users') || '{}');
+                if (users[session]) {
+                    currentUser = session;
+                    currentGang = users[session].gang;
+                    showMainApp();
+                }
+            }
+        }
+
+        function showMainApp() {
+            document.getElementById('authSection').style.display = 'none';
+            document.getElementById('mainApp').classList.add('active');
+            document.getElementById('currentUser').textContent = currentUser;
+            
+           loadGangInfo();
+loadInventory();
+initializeProducts();
+actualizarValorTotal();
+        }
+
+        function showAlert(containerId, message, type) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = `<div class="alert alert-${type}">${message}</div>`;
+            
+            setTimeout(() => {
+                container.innerHTML = '';
+            }, 3000);
+        }
+
+        // Gang Functions
+        function showCreateGangModal() {
+            const modalContent = `
+                <div class="form-group">
+                    <label>🏷️ Nombre de la Pandilla:</label>
+                    <input type="text" id="gangName" placeholder="Ej: Los Santos Vagos">
+                </div>
+                <button class="btn btn-secondary" onclick="createGang()">🏗️ Crear Pandilla</button>
+            `;
+            
+            document.getElementById('modalTitle').textContent = '🏗️ Crear Nueva Pandilla';
+            document.getElementById('modalContent').innerHTML = modalContent;
+            document.getElementById('quantityButtons').style.display = 'none';
+            document.getElementById('operationModal').classList.add('active');
+        }
+
+        function showJoinGangModal() {
+            const modalContent = `
+                <div class="form-group">
+                    <label>🔑 Código de Invitación:</label>
+                    <input type="text" id="gangCode" placeholder="Ingresa el código">
+                </div>
+                <button class="btn btn-secondary" onclick="joinGang()">🤝 Unirse</button>
+            `;
+            
+            document.getElementById('modalTitle').textContent = '🤝 Unirse a Pandilla';
+            document.getElementById('modalContent').innerHTML = modalContent;
+            document.getElementById('quantityButtons').style.display = 'none';
+            document.getElementById('operationModal').classList.add('active');
+        }
+
+        function createGang() {
+            const gangName = document.getElementById('gangName').value.trim();
+            
+            if (!gangName) {
+                alert('Ingresa un nombre para la pandilla');
+                return;
+            }
+
+            const gangs = JSON.parse(localStorage.getItem('gangs') || '{}');
+            const gangCode = generateGangCode();
+
+            if (Object.values(gangs).find(g => g.name === gangName)) {
+                alert('Ya existe una pandilla con ese nombre');
+                return;
+            }
+
+           gangs[gangCode] = {
+    name: gangName,
+    leader: currentUser,
+    members: [currentUser],
+    inventory: initializeGangInventory(),
+    createdAt: new Date().toISOString()
+};
+
+// Establecer rol de líder
+gangs[gangCode].inventory.members[currentUser] = 'lider';
+
+            localStorage.setItem('gangs', JSON.stringify(gangs));
+            
+            // Update user
+            const users = JSON.parse(localStorage.getItem('users') || '{}');
+            users[currentUser].gang = gangCode;
+            localStorage.setItem('users', JSON.stringify(users));
+            
+            currentGang = gangCode;
+            closeModal();
+            loadGangInfo();
+            loadInventory();
+            
+            alert(`¡Pandilla "${gangName}" creada! Código: ${gangCode}`);
+        }
+
+        function joinGang() {
+            const gangCode = document.getElementById('gangCode').value.trim().toUpperCase();
+            
+            if (!gangCode) {
+                alert('Ingresa un código de pandilla');
+                return;
+            }
+
+            const gangs = JSON.parse(localStorage.getItem('gangs') || '{}');
+            
+            if (!gangs[gangCode]) {
+                alert('Código de pandilla inválido');
+                return;
+            }
+
+            if (gangs[gangCode].members.includes(currentUser)) {
+                alert('Ya eres miembro de esta pandilla');
+                return;
+            }
+
+            gangs[gangCode].members.push(currentUser);
+            // Establecer rol de miembro normal
+gangs[gangCode].inventory.members[currentUser] = 'miembro';
+            localStorage.setItem('gangs', JSON.stringify(gangs));
+            
+            // Update user
+            const users = JSON.parse(localStorage.getItem('users') || '{}');
+            users[currentUser].gang = gangCode;
+            localStorage.setItem('users', JSON.stringify(users));
+            
+            currentGang = gangCode;
+            closeModal();
+            loadGangInfo();
+            loadInventory();
+            
+            alert(`¡Te has unido a "${gangs[gangCode].name}"!`);
+        }
+
+        function leaveGang() {
+            if (!confirm('¿Estás seguro que quieres salir de la pandilla?')) return;
+
+            const gangs = JSON.parse(localStorage.getItem('gangs') || '{}');
+            const gang = gangs[currentGang];
+            
+            // Remove from members
+            gang.members = gang.members.filter(member => member !== currentUser);
+            
+            // If was leader and there are other members, assign new leader
+            if (gang.leader === currentUser && gang.members.length > 0) {
+                gang.leader = gang.members[0];
+            }
+            
+            // If no members left, delete gang
+            if (gang.members.length === 0) {
+                delete gangs[currentGang];
+            } else {
+                gangs[currentGang] = gang;
+            }
+            
+            localStorage.setItem('gangs', JSON.stringify(gangs));
+            
+            // Update user
+            const users = JSON.parse(localStorage.getItem('users') || '{}');
+            users[currentUser].gang = null;
+            localStorage.setItem('users', JSON.stringify(users));
+            
+            currentGang = null;
+            loadGangInfo();
+            loadInventory();
+            
+            alert('Has salido de la pandilla');
+        }
+
+        function loadGangInfo() {
+            const gangInfo = document.getElementById('gangInfo');
+            const leaveBtn = document.getElementById('leaveGangBtn');
+            
+            if (!currentGang) {
+                gangInfo.innerHTML = '<p style="color: #ffff00;">No perteneces a ninguna pandilla</p>';
+                leaveBtn.style.display = 'none';
+                return;
+            }
+
+            const gangs = JSON.parse(localStorage.getItem('gangs') || '{}');
+            const gang = gangs[currentGang];
+            
+            if (!gang) {
+                currentGang = null;
+                loadGangInfo();
+                return;
+            }
+
+            const isLeader = gang.leader === currentUser;
+            
+            let membersHtml = '<div class="gang-members"><h4>👥 Miembros:</h4>';
+            gang.members.forEach(member => {
+    const memberRole = gang.inventory.members?.[member] || 'miembro';
+    let roleDisplay = '👤 Miembro';
+    if (memberRole === 'lider') roleDisplay = '👑 Líder';
+    else if (memberRole === 'sublider') roleDisplay = '🔱 Sublíder';
+    
+    membersHtml += `
+        <div class="member-item">
+            <div class="member-info">${member}</div>
+            <div class="member-role">${roleDisplay}</div>
+        </div>
+    `;
+});
+            membersHtml += '</div>';
+
+            membersHtml += '</div>';
+
+// NUEVO: Agregar valor total del inventario
+const valorTotal = calcularValorTotal();
+const valorTotalHtml = `
+    <div class="valor-total" id="valorTotal">
+        <h4>💰 Valor Total del Inventario</h4>
+        <div class="monto" id="montoTotal">$${valorTotal.toLocaleString()}</div>
+    </div>
+`;
+
+gangInfo.innerHTML = `
+    <div style="color: #9b59b6;">
+        <h3>🏷️ ${gang.name} (Código: ${currentGang})</h3>
+        <p>👑 Líder: ${gang.leader}</p>
+    </div>
+    ${membersHtml}
+    ${valorTotalHtml}
+`;
+            
+            leaveBtn.style.display = 'block';
+
+// Mostrar botón de gestión solo para líderes
+const manageMembersBtn = document.getElementById('manageMembersBtn');
+if (isLeader) {
+    manageMembersBtn.style.display = 'block';
+} else {
+    manageMembersBtn.style.display = 'none';
+}
+        }
+
+        function showGangInfo() {
+            if (!currentGang) {
+                alert('No perteneces a ninguna pandilla');
+                return;
+            }
+            loadGangInfo();
+        }
+
+        // ===============================================
+        // 🚨 AQUÍ EMPIEZAN LAS FUNCIONES QUE FALTAN 🚨
+        // ===============================================
+
+        // 1. 🎯 generateGangCode() - Genera códigos únicos para pandillas
+        function generateGangCode() {
+            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let result = '';
+            
+            for (let i = 0; i < 6; i++) {
+                const randomIndex = Math.floor(Math.random() * characters.length);
+                result += characters[randomIndex];
+            }
+            
+            return result;
+        }
+        // NUEVA FUNCIÓN: Calcular valor total del inventario
+function calcularValorTotal() {
+    if (!currentGang) return 0;
+    
+    const gangs = JSON.parse(localStorage.getItem('gangs') || '{}');
+    const gang = gangs[currentGang];
+    
+    if (!gang || !gang.inventory || !gang.inventory.items) return 0;
+    
+    let valorTotal = 0;
+    
+    Object.entries(gang.inventory.items).forEach(([producto, datos]) => {
+        const cantidad = Number(datos.quantity || datos.cantidad || 0);
+        const precio = Number(datos.price || datos.precio || 0);
+        valorTotal += cantidad * precio;
+    });
+    
+    return valorTotal;
+}
+
+// NUEVA FUNCIÓN: Actualizar display del valor total
+function actualizarValorTotal() {
+    const valorTotalElement = document.getElementById('valorTotal');
+    if (valorTotalElement) {
+        const valorTotal = calcularValorTotal();
+        document.getElementById('montoTotal').textContent = `$${valorTotal.toLocaleString()}`;
+    }
+}
+
+        // 2. 📦 initializeGangInventory() - Crea inventario vacío para pandillas nuevas
+        function initializeGangInventory() {
+    const baseItems = {
+        // Armas
+        'glock': { quantity: 0, price: 5000 },
+        'vintage': { quantity: 0, price: 8000 },
+        'beretta': { quantity: 0, price: 6000 },
+        'hachas': { quantity: 0, price: 2000 },
+        'machetes': { quantity: 0, price: 1500 },
+        
+        // Cargadores
+        'cargador pistolas': { quantity: 0, price: 500 },
+        'cargador subfusil': { quantity: 0, price: 800 },
+        
+        // Drogas
+        'bongs': { quantity: 0, price: 1000 },
+        'pcp': { quantity: 0, price: 3000 },
+        'galletas': { quantity: 0, price: 800 },
+        'fentanilo': { quantity: 0, price: 4000 },
+        'marihuana': { quantity: 0, price: 1200 },
+        
+        // Planos
+        'supermercado': { quantity: 0, price: 10000 },
+        'gasolinera': { quantity: 0, price: 12000 },
+        'joyeria': { quantity: 0, price: 15000 },
+        'barberia': { quantity: 0, price: 8000 },
+        'licoreria': { quantity: 0, price: 9000 },
+        'farmacia': { quantity: 0, price: 11000 },
+        'arquitectónico': { quantity: 0, price: 20000 },
+        'ropa': { quantity: 0, price: 7000 },
+        'tatuajes': { quantity: 0, price: 6000 }
+    };
+    
+    return {
+        items: baseItems,
+        logs: [],
+        members: {}
+    };
+}
+
+        // 3. 🔄 loadInventory() - Carga el inventario en pantalla
+        function loadInventory() {
+    if (!currentGang) {
+        clearAllGrids();
+        return;
+    }
+    
+    const gangs = JSON.parse(localStorage.getItem('gangs') || '{}');
+    const gang = gangs[currentGang];
+    
+    if (!gang) {
+        clearAllGrids();
+        return;
+    }
+    
+    // Migrar inventario antiguo si es necesario
+    if (!gang.inventory.items) {
+        gang.inventory = migrateOldInventory(gang.inventory);
+        localStorage.setItem('gangs', JSON.stringify(gangs));
+    }
+    
+    updateCategoryGrid('armas', gang.inventory.items);
+    updateCategoryGrid('cargadores', gang.inventory.items);
+    updateCategoryGrid('drogas', gang.inventory.items);
+    updateCategoryGrid('planos', gang.inventory.items);
+}
+
+        // 4. 🎨 initializeProducts() - Crea las tarjetas de productos
+        function initializeProducts() {
+    Object.keys(productos).forEach(category => {
+        const grid = document.getElementById(`grid-${category}`);
+        if (!grid) return;
+        
+        grid.innerHTML = '';
+        
+        Object.entries(productos[category]).forEach(([emoji, name]) => {
+            const productCard = createProductCard(emoji, name, category, { quantity: 0, price: 0 });
+            grid.appendChild(productCard);
+        });
+    });
+}
+
+        // 5. 📂 showCategory() - Muestra una categoría específica
+        function showCategory(category) {
+            document.querySelectorAll('.products-grid').forEach(grid => {
+                grid.classList.remove('active');
+            });
+            
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            const targetGrid = document.getElementById(`grid-${category}`);
+            if (targetGrid) {
+                targetGrid.classList.add('active');
+            }
+            
+            event.target.classList.add('active');
+        }
+
+        // 6. 📊 showAllStock() - Muestra todos los productos juntos
+        function showAllStock() {
+            document.querySelectorAll('.products-grid').forEach(grid => {
+                if (grid.id !== 'grid-all') {
+                    grid.classList.remove('active');
+                }
+            });
+            
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            event.target.classList.add('active');
+            
+            const allGrid = document.getElementById('grid-all');
+            allGrid.classList.add('active');
+            allGrid.innerHTML = '';
+            
+            if (!currentGang) return;
+            
+            const gangs = JSON.parse(localStorage.getItem('gangs') || '{}');
+            const gang = gangs[currentGang];
+            if (!gang) return;
+            
+            Object.keys(productos).forEach(category => {
+    Object.entries(productos[category]).forEach(([emoji, name]) => {
+        const itemData = gang.inventory.items[name] || { quantity: 0, price: 0 };
+        const productCard = createProductCard(emoji, name, category, itemData);
+        allGrid.appendChild(productCard);
+    });
+});
+        }
+
+        // 7. ⚡ executeOperation() - Ejecuta agregar/quitar items
+        function executeOperation(quantity) {
+    if (!currentGang || !currentOperation || !currentProduct) {
+        alert('Error: Faltan datos para la operación');
+        return;
+    }
+    
+    const gangs = JSON.parse(localStorage.getItem('gangs') || '{}');
+    const gang = gangs[currentGang];
+    
+    if (!gang) {
+        alert('Error: Pandilla no encontrada');
+        return;
+    }
+    
+    // Asegurar que existe la estructura de items
+    if (!gang.inventory.items) {
+        gang.inventory = migrateOldInventory(gang.inventory);
+    }
+    
+    const currentItem = gang.inventory.items[currentProduct] || { quantity: 0, price: 0 };
+    let newQuantity;
+    
+    if (currentOperation === 'add') {
+        newQuantity = currentItem.quantity + quantity;
+    } else if (currentOperation === 'remove') {
+        newQuantity = Math.max(0, currentItem.quantity - quantity);
+    } else {
+        alert('Operación no válida');
+        return;
+    }
+    
+    // Actualizar cantidad
+    gang.inventory.items[currentProduct].quantity = newQuantity;
+    
+    // Agregar log
+    const logEntry = {
+        timestamp: new Date().toISOString(),
+        user: currentUser,
+        action: currentOperation === 'add' ? 'Agregó' : 'Quitó',
+        item: currentProduct,
+        quantity: quantity,
+        newTotal: newQuantity
+    };
+    
+    if (!gang.inventory.logs) gang.inventory.logs = [];
+    gang.inventory.logs.unshift(logEntry); // Agregar al inicio
+    
+    // Mantener solo los últimos 50 logs
+    if (gang.inventory.logs.length > 50) {
+        gang.inventory.logs = gang.inventory.logs.slice(0, 50);
+    }
+    
+    localStorage.setItem('gangs', JSON.stringify(gangs));
+    
+    loadInventory();
+    closeModal();
+    
+    const action = currentOperation === 'add' ? 'agregado' : 'removido';
+    alert(`${quantity} ${currentProduct} ${action} exitosamente`);
+}
+
+        // 8. ❌ closeModal() - Cierra las ventanas emergentes
+        function closeModal() {
+            const modal = document.getElementById('operationModal');
+            modal.classList.remove('active');
+            
+            currentOperation = null;
+            currentProduct = null;
+            
+            document.getElementById('modalTitle').textContent = '';
+            document.getElementById('modalContent').innerHTML = '';
+            document.getElementById('quantityButtons').style.display = 'none';
+        }
+
+        // ===============================================
+        // 🛠️ FUNCIONES AUXILIARES (también necesarias)
+        // ===============================================
+
+        function clearAllGrids() {
+            document.querySelectorAll('.products-grid').forEach(grid => {
+                grid.innerHTML = '';
+                grid.classList.remove('active');
+            });
+        }
+
+        function updateCategoryGrid(category, inventory) {
+    const grid = document.getElementById(`grid-${category}`);
+    if (!grid) return;
+    
+    grid.innerHTML = '';
+    
+    Object.entries(productos[category]).forEach(([emoji, name]) => {
+        const itemData = inventory[name] || { quantity: 0, price: 0 };
+        const productCard = createProductCard(emoji, name, category, itemData);
+        grid.appendChild(productCard);
+    });
+}
+
+        function createProductCard(emoji, name, category, itemData) {
+    const card = document.createElement('div');
+    card.className = 'product-card';
+    
+    const quantity = itemData ? itemData.quantity : 0;
+    const price = itemData ? itemData.price : 0;
+    
+    let stockClass = 'stock-normal';
+    if (quantity === 0) stockClass = 'stock-empty';
+    else if (quantity < 5) stockClass = 'stock-low';
+    
+    card.classList.add(stockClass);
+    
+    // Verificar permisos para cambiar precios
+    const canChangePrice = canUserChangePrice();
+    
+    card.innerHTML = `
+        <div class="product-header">
+            <span class="product-emoji">${emoji}</span>
+            <span class="product-name">${name}</span>
+        </div>
+        <div class="product-stats">
+            <div class="stat-row">
+                <span class="stat-label">📦 Stock:</span>
+                <span class="stat-value">${quantity}</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">💰 Precio:</span>
+                <span class="stat-value">$${price.toLocaleString()}</span>
+            </div>
+        </div>
+        <div class="product-actions">
+            <button class="action-btn btn-add" onclick="showQuantityModal('add', '${name}')">➕ Agregar</button>
+            <button class="action-btn btn-remove" onclick="showQuantityModal('remove', '${name}')">➖ Quitar</button>
+            ${canChangePrice ? `<button class="action-btn btn-price" onclick="showPriceModal('${name}')">💰 Precio</button>` : ''}
+        </div>
+    `;
+    
+    return card;
+}
+
+        function showQuantityModal(operation, productName) {
+            if (!currentGang) {
+                alert('Necesitas estar en una pandilla para gestionar inventario');
+                return;
+            }
+            
+            currentOperation = operation;
+            currentProduct = productName;
+            
+            const action = operation === 'add' ? 'Agregar' : 'Quitar';
+            const emoji = operation === 'add' ? '➕' : '➖';
+            
+            document.getElementById('modalTitle').textContent = `${emoji} ${action} ${productName}`;
+            document.getElementById('modalContent').innerHTML = `
+                <p>Selecciona la cantidad a ${action.toLowerCase()}:</p>
+            `;
+            document.getElementById('quantityButtons').style.display = 'grid';
+            document.getElementById('operationModal').classList.add('active');
+        }
+
+        function loadUserData() {
+            // Esta función puede estar vacía por ahora
+            // Se usaría para cargar datos adicionales del usuario
+        }
+
+        // 🚀 Inicialización cuando la página carga
+        document.addEventListener('DOMContentLoaded', function() {
+            init();
+        });
+function migrateOldInventory(oldInventory) {
+    const newInventory = initializeGangInventory();
+    
+    // Migrar cantidades del inventario antiguo
+    Object.keys(oldInventory).forEach(itemName => {
+        if (typeof oldInventory[itemName] === 'number') {
+            if (newInventory.items[itemName]) {
+                newInventory.items[itemName].quantity = oldInventory[itemName];
+            }
+        }
+    });
+    
+    return newInventory;
+}
+function canUserChangePrice() {
+    if (!currentGang) return false;
+    
+    const gangs = JSON.parse(localStorage.getItem('gangs') || '{}');
+    const gang = gangs[currentGang];
+    
+    if (!gang || !gang.inventory.members) return false;
+    
+    const userRole = gang.inventory.members[currentUser];
+    return userRole === 'lider' || userRole === 'sublider';
+}
+function showPriceModal(productName) {
+    if (!canUserChangePrice()) {
+        alert('Solo líderes y sublíderes pueden cambiar precios');
+        return;
+    }
+    
+    const gangs = JSON.parse(localStorage.getItem('gangs') || '{}');
+    const gang = gangs[currentGang];
+    const currentPrice = gang.inventory.items[productName]?.price || 0;
+    
+    currentOperation = 'price';
+    currentProduct = productName;
+    
+    document.getElementById('modalTitle').textContent = `💰 Cambiar Precio - ${productName}`;
+    document.getElementById('modalContent').innerHTML = `
+        <p>Precio actual: $${currentPrice.toLocaleString()}</p>
+        <div class="form-group">
+            <label>💰 Nuevo Precio:</label>
+            <input type="number" id="newPrice" placeholder="Ingresa el nuevo precio" value="${currentPrice}">
+        </div>
+        <button class="btn btn-secondary" onclick="updatePrice()">💰 Actualizar Precio</button>
+    `;
+    document.getElementById('quantityButtons').style.display = 'none';
+    document.getElementById('operationModal').classList.add('active');
+}
+
+function updatePrice() {
+    const newPrice = parseInt(document.getElementById('newPrice').value);
+    
+    if (isNaN(newPrice) || newPrice < 0) {
+        alert('Ingresa un precio válido');
+        return;
+    }
+    
+    const gangs = JSON.parse(localStorage.getItem('gangs') || '{}');
+    const gang = gangs[currentGang];
+    
+    const oldPrice = gang.inventory.items[currentProduct].price;
+    gang.inventory.items[currentProduct].price = newPrice;
+    
+    // Agregar log de cambio de precio
+    const logEntry = {
+        timestamp: new Date().toISOString(),
+        user: currentUser,
+        action: 'Cambió precio',
+        item: currentProduct,
+        oldPrice: oldPrice,
+        newPrice: newPrice
+    };
+    
+    if (!gang.inventory.logs) gang.inventory.logs = [];
+    gang.inventory.logs.unshift(logEntry);
+    
+    if (gang.inventory.logs.length > 50) {
+        gang.inventory.logs = gang.inventory.logs.slice(0, 50);
+    }
+    
+    localStorage.setItem('gangs', JSON.stringify(gangs));
+    
+    loadInventory();
+    actualizarValorTotal(); // ← AQUÍ YA ESTÁ INCLUIDA LA LLAMADA
+    closeModal();
+    alert(`Precio de ${currentProduct} actualizado a $${newPrice.toLocaleString()}`);
+}
+
+function showLogs() {
+    if (!currentGang) {
+        alert('No perteneces a ninguna pandilla');
+        return;
+    }
+    
+    const gangs = JSON.parse(localStorage.getItem('gangs') || '{}');
+    const gang = gangs[currentGang];
+    
+    if (!gang.inventory.logs || gang.inventory.logs.length === 0) {
+        alert('No hay logs disponibles');
+        return;
+    }
+    
+    let logsHtml = '<div style="max-height: 400px; overflow-y: auto;">';
+    
+    gang.inventory.logs.forEach(log => {
+        const date = new Date(log.timestamp).toLocaleString();
+        let logText = '';
+        
+        if (log.action === 'Cambió precio') {
+            logText = `💰 ${log.user} cambió precio de ${log.item} de $${log.oldPrice.toLocaleString()} a $${log.newPrice.toLocaleString()}`;
+        } else {
+            logText = `📦 ${log.user} ${log.action.toLowerCase()} ${log.quantity} ${log.item} (Total: ${log.newTotal})`;
+        }
+        
+        logsHtml += `
+            <div style="border-bottom: 1px solid #333; padding: 8px 0; font-size: 14px;">
+                <div style="color: #ffff00;">${date}</div>
+                <div style="color: #00ff41;">${logText}</div>
+            </div>
+        `;
+    });
+    
+    logsHtml += '</div>';
+    
+    document.getElementById('modalTitle').textContent = '📋 Historial de Actividades';
+    document.getElementById('modalContent').innerHTML = logsHtml;
+    document.getElementById('quantityButtons').style.display = 'none';
+    document.getElementById('operationModal').classList.add('active');
+}
+function showMemberManagement() {
+    if (!currentGang) {
+        alert('No perteneces a ninguna pandilla');
+        return;
+    }
+    
+    const gangs = JSON.parse(localStorage.getItem('gangs') || '{}');
+    const gang = gangs[currentGang];
+    
+    if (gang.leader !== currentUser) {
+        alert('Solo el líder puede gestionar miembros');
+        return;
+    }
+    
+    let membersHtml = '<div style="max-height: 300px; overflow-y: auto;">';
+    
+    gang.members.forEach(member => {
+    if (member === currentUser) return; // No mostrar al líder actual
+    
+    const memberRole = gang.inventory.members?.[member] || 'miembro';
+    let roleDisplay = '👤 Miembro';
+    if (memberRole === 'lider') roleDisplay = '👑 Líder';
+    else if (memberRole === 'sublider') roleDisplay = '🔱 Sublíder';
+    
+    membersHtml += `
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #333;">
+            <div>
+                <div style="color: #00ff41;">${member}</div>
+                <div style="color: #ffff00; font-size: 12px;">${roleDisplay}</div>
+            </div>
+            <div>
+                <button class="action-btn btn-price" onclick="changeRole('${member}', 'sublider')" ${memberRole === 'sublider' ? 'disabled' : ''}>👑 Sublíder</button>
+                <button class="action-btn btn-add" onclick="changeRole('${member}', 'miembro')" ${memberRole === 'miembro' ? 'disabled' : ''}>👤 Miembro</button>
+            </div>
+        </div>
+    `;
+});
+    
+    membersHtml += '</div>';
+    
+    document.getElementById('modalTitle').textContent = '👥 Gestión de Miembros';
+    document.getElementById('modalContent').innerHTML = membersHtml;
+    document.getElementById('quantityButtons').style.display = 'none';
+    document.getElementById('operationModal').classList.add('active');
+}
+
+function changeRole(member, newRole) {
+    const gangs = JSON.parse(localStorage.getItem('gangs') || '{}');
+    const gang = gangs[currentGang];
+    
+    const oldRole = gang.inventory.members[member] || 'miembro';
+    gang.inventory.members[member] = newRole;
+    
+    // Agregar log de cambio de rol
+    const logEntry = {
+        timestamp: new Date().toISOString(),
+        user: currentUser,
+        action: 'Cambió rol',
+        member: member,
+        oldRole: oldRole,
+        newRole: newRole
+    };
+    
+    if (!gang.inventory.logs) gang.inventory.logs = [];
+    gang.inventory.logs.unshift(logEntry);
+    
+    if (gang.inventory.logs.length > 50) {
+        gang.inventory.logs = gang.inventory.logs.slice(0, 50);
+    }
+    
+    localStorage.setItem('gangs', JSON.stringify(gangs));
+    
+    closeModal();
+    alert(`Rol de ${member} cambiado a ${newRole}`);
+    loadGangInfo();
+}
+    </script>
+</body>
+</html>
