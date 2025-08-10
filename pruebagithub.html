@@ -1,0 +1,4196 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GTA RP - Inventory Manager</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 50%, #2d1b69 100%);
+            color: #00ff41;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 15px;
+            border: 2px solid #00ff41;
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.3);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            color: #00ff41;
+            text-shadow: 0 0 10px rgba(0, 255, 65, 0.5);
+            margin-bottom: 10px;
+        }
+
+        .header .subtitle {
+            color: #ffff00;
+            font-size: 1.2rem;
+        }
+
+        /* Auth Section */
+        .auth-section {
+            background: rgba(0, 0, 0, 0.9);
+            padding: 30px;
+            border-radius: 15px;
+            border: 2px solid #ff6b35;
+            box-shadow: 0 0 20px rgba(255, 107, 53, 0.3);
+            margin-bottom: 20px;
+        }
+
+        .auth-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            padding: 10px 20px;
+            background: rgba(255, 107, 53, 0.2);
+            border: 2px solid #ff6b35;
+            color: #ff6b35;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+
+        .tab-btn.active {
+            background: #ff6b35;
+            color: #000;
+            box-shadow: 0 0 15px rgba(255, 107, 53, 0.5);
+        }
+
+        .auth-form {
+            display: none;
+        }
+
+        .auth-form.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #00ff41;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid #00ff41;
+            border-radius: 8px;
+            color: #00ff41;
+            font-size: 16px;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #ffff00;
+            box-shadow: 0 0 10px rgba(255, 255, 0, 0.3);
+        }
+
+        .btn {
+            padding: 12px 25px;
+            background: linear-gradient(45deg, #ff6b35, #f7931e);
+            border: none;
+            border-radius: 8px;
+            color: #000;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 16px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 107, 53, 0.4);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(45deg, #00ff41, #00cc33);
+        }
+
+        .btn-danger {
+            background: linear-gradient(45deg, #ff3030, #cc0000);
+        }
+
+        /* Main App */
+        .main-app {
+            display: none;
+        }
+
+        .main-app.active {
+            display: block;
+        }
+
+        .user-info {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px solid #00ff41;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .user-info h3 {
+            color: #ffff00;
+        }
+
+        /* Gang Section */
+        .gang-section {
+            background: rgba(0, 0, 0, 0.9);
+            padding: 20px;
+            border-radius: 15px;
+            border: 2px solid #9b59b6;
+            box-shadow: 0 0 20px rgba(155, 89, 182, 0.3);
+            margin-bottom: 20px;
+        }
+
+        .gang-section h2 {
+            color: #9b59b6;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .gang-controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+/* NUEVO: Estilos para valor total */
+.valor-total {
+    background: rgba(255, 215, 0, 0.1);
+    border: 2px solid #ffd700;
+    border-radius: 10px;
+    padding: 15px;
+    margin-top: 15px;
+    text-align: center;
+    animation: pulse-gold 2s infinite;
+}
+
+.valor-total h4 {
+    color: #ffd700;
+    font-size: 1.2rem;
+    margin-bottom: 5px;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+}
+
+.valor-total .monto {
+    color: #ffff00;
+    font-size: 1.8rem;
+    font-weight: bold;
+    text-shadow: 0 0 15px rgba(255, 255, 0, 0.7);
+}
+
+@keyframes pulse-gold {
+    0%, 100% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.3); }
+    50% { box-shadow: 0 0 30px rgba(255, 215, 0, 0.6); }
+}
+        /* Inventory Section */
+        .inventory-section {
+            background: rgba(0, 0, 0, 0.9);
+            padding: 20px;
+            border-radius: 15px;
+            border: 2px solid #00ff41;
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.3);
+        }
+
+        .inventory-section h2 {
+            color: #00ff41;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .category-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .category-btn {
+            padding: 15px;
+            background: rgba(0, 255, 65, 0.1);
+            border: 2px solid #00ff41;
+            border-radius: 10px;
+            color: #00ff41;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .category-btn:hover {
+            background: rgba(0, 255, 65, 0.2);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 255, 65, 0.3);
+        }
+
+        .category-btn.active {
+            background: #00ff41;
+            color: #000;
+        }
+
+        /* Product Grid */
+        .products-grid {
+            display: none;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .products-grid.active {
+            display: grid;
+        }
+
+        .product-card {
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid #ffff00;
+            border-radius: 10px;
+            padding: 15px;
+            transition: all 0.3s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(255, 255, 0, 0.2);
+        }
+
+        .product-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .product-emoji {
+    font-size: 24px;
+    color: #ff6b35;
+    width: 30px;
+    text-align: center;
+}
+
+.product-emoji i {
+    color: #ff6b35;
+    text-shadow: 0 0 10px rgba(255, 107, 53, 0.5);
+}
+
+        .product-name {
+            color: #ffff00;
+            font-weight: bold;
+        }
+
+        .product-stats {
+            margin-bottom: 15px;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #00ff41;
+        }
+
+        .stat-value {
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .product-actions {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-add {
+            background: #00ff41;
+            color: #000;
+        }
+
+        .btn-remove {
+            background: #ff3030;
+            color: #fff;
+        }
+
+        .btn-price {
+            background: #ffff00;
+            color: #000;
+        }
+
+        /* Stock Status */
+        .stock-normal { border-left: 4px solid #00ff41; }
+        .stock-low { border-left: 4px solid #ffff00; }
+        .stock-empty { border-left: 4px solid #ff3030; }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: rgba(0, 0, 0, 0.95);
+            border: 2px solid #00ff41;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+        }
+
+        .modal h3 {
+            color: #00ff41;
+            margin-bottom: 20px;
+        }
+
+        .quantity-buttons {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .qty-btn {
+            padding: 15px;
+            background: rgba(255, 107, 53, 0.2);
+            border: 2px solid #ff6b35;
+            border-radius: 8px;
+            color: #ff6b35;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .qty-btn:hover {
+            background: #ff6b35;
+            color: #000;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .category-buttons {
+                grid-template-columns: 1fr;
+            }
+            
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .gang-controls {
+                flex-direction: column;
+            }
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .alert {
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .alert-success {
+            background: rgba(0, 255, 65, 0.2);
+            border: 1px solid #00ff41;
+            color: #00ff41;
+        }
+
+        .alert-error {
+            background: rgba(255, 48, 48, 0.2);
+            border: 1px solid #ff3030;
+            color: #ff3030;
+        }
+
+        .gang-members {
+            background: rgba(155, 89, 182, 0.1);
+            border: 1px solid #9b59b6;
+            border-radius: 8px;
+            padding: 10px;
+            margin-top: 15px;
+        }
+
+        .member-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(155, 89, 182, 0.3);
+        }
+
+        .member-item:last-child {
+            border-bottom: none;
+        }
+
+        .member-info {
+            color: #9b59b6;
+        }
+
+        .member-role {
+            color: #ffff00;
+            font-size: 12px;
+        }
+        /* Admin Panel Styles */
+.admin-panel {
+    background: rgba(255, 0, 0, 0.1);
+    border: 2px solid #ff0040;
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 0 20px rgba(255, 0, 64, 0.3);
+}
+
+.admin-panel h2 {
+    color: #ff0040;
+    text-align: center;
+    margin-bottom: 15px;
+    text-shadow: 0 0 10px rgba(255, 0, 64, 0.5);
+}
+
+.admin-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.stat-card {
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid #ff0040;
+    border-radius: 10px;
+    padding: 15px;
+    text-align: center;
+}
+
+.stat-number {
+    font-size: 2rem;
+    color: #ff0040;
+    font-weight: bold;
+    display: block;
+}
+
+.stat-text {
+    color: #ffff00;
+    font-size: 14px;
+}
+
+.ranking-section {
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid #ffd700;
+    border-radius: 10px;
+    padding: 15px;
+    margin-top: 15px;
+}
+
+.ranking-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255, 215, 0, 0.3);
+}
+
+.ranking-item:last-child {
+    border-bottom: none;
+}
+
+.ranking-position {
+    color: #ffd700;
+    font-weight: bold;
+    width: 30px;
+}
+
+.ranking-gang {
+    color: #00ff41;
+    flex-grow: 1;
+}
+
+.ranking-value {
+    color: #ffff00;
+    font-weight: bold;
+    
+}
+/* =============================================== */
+/* 🌑 ESTILOS PARA MERCADO NEGRO */
+/* =============================================== */
+
+.market-filter {
+    padding: 10px 15px;
+    background: rgba(255, 0, 128, 0.2);
+    border: 2px solid #ff0080;
+    border-radius: 8px;
+    color: #ff0080;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-align: center;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.market-filter:hover {
+    background: rgba(255, 0, 128, 0.3);
+    transform: translateY(-2px);
+}
+
+.market-filter.active {
+    background: #ff0080;
+    color: #000;
+    box-shadow: 0 0 15px rgba(255, 0, 128, 0.5);
+}
+
+.market-offer-card {
+    transition: all 0.3s;
+}
+
+.market-offer-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(255, 0, 128, 0.3);
+}
+/* Admin Controls */
+.admin-controls {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.admin-btn {
+    padding: 12px 15px;
+    border: 2px solid #ff0040;
+    border-radius: 8px;
+    background: rgba(255, 0, 64, 0.2);
+    color: #ff0040;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s;
+    text-align: center;
+}
+
+.admin-btn:hover {
+    background: #ff0040;
+    color: #000;
+    transform: translateY(-2px);
+}
+
+.admin-btn.danger {
+    border-color: #ff3030;
+    color: #ff3030;
+    background: rgba(255, 48, 48, 0.2);
+}
+
+.admin-btn.danger:hover {
+    background: #ff3030;
+}
+
+.user-list, .gang-list {
+    max-height: 300px;
+    overflow-y: auto;
+    margin: 15px 0;
+}
+
+.list-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #333;
+    background: rgba(0, 0, 0, 0.5);
+    margin-bottom: 5px;
+    border-radius: 5px;
+}
+
+.item-info {
+    flex-grow: 1;
+}
+
+.item-actions {
+    display: flex;
+    gap: 5px;
+}
+
+.mini-btn {
+    padding: 5px 10px;
+    font-size: 12px;
+    border: 1px solid;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.banned-user {
+    opacity: 0.5;
+    background: rgba(255, 48, 48, 0.1);
+}
+
+.notification-form {
+    margin: 15px 0;
+}
+
+.notification-form textarea {
+    width: 100%;
+    height: 100px;
+    background: rgba(0, 0, 0, 0.7);
+    border: 2px solid #00ff41;
+    border-radius: 8px;
+    color: #00ff41;
+    padding: 10px;
+    resize: vertical;
+}
+
+.spy-inventory {
+    max-height: 400px;
+    overflow-y: auto;
+    background: rgba(0, 0, 0, 0.8);
+    border: 1px solid #333;
+    border-radius: 8px;
+    padding: 15px;
+    margin: 10px 0;
+}
+
+.spy-category {
+    margin-bottom: 20px;
+}
+
+.spy-category h4 {
+    color: #00ff41;
+    border-bottom: 1px solid #333;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+}
+
+.spy-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 0;
+    border-bottom: 1px solid rgba(51, 51, 51, 0.5);
+}
+/* Clickable Stats */
+.clickable-stat {
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.clickable-stat:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 0, 64, 0.4);
+    border-color: #ffff00;
+}
+
+/* Search Box */
+.search-box {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    background: rgba(0, 0, 0, 0.7);
+    border: 2px solid #00ff41;
+    border-radius: 8px;
+    color: #00ff41;
+    font-size: 14px;
+}
+
+.search-box:focus {
+    outline: none;
+    border-color: #ffff00;
+    box-shadow: 0 0 10px rgba(255, 255, 0, 0.3);
+}
+
+.detailed-list {
+    max-height: 350px;
+    overflow-y: auto;
+}
+
+.list-item-detailed {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    margin-bottom: 8px;
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid #333;
+    border-radius: 8px;
+    transition: all 0.3s;
+}
+
+.list-item-detailed:hover {
+    background: rgba(0, 255, 65, 0.1);
+    border-color: #00ff41;
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🎮 GTA RP INVENTORY</h1>
+            <div class="subtitle">Sistema de Gestión de Inventarios</div>
+        </div>
+
+        <!-- Auth Section -->
+        <div class="auth-section" id="authSection">
+            <div class="auth-tabs">
+                <div class="tab-btn active" onclick="switchAuthTab('login')">🔐 Iniciar Sesión</div>
+                <div class="tab-btn" onclick="switchAuthTab('register')">📝 Registrarse</div>
+            </div>
+
+            <!-- Login Form -->
+            <div class="auth-form active" id="loginForm">
+                <div id="loginAlert"></div>
+                <div class="form-group">
+                    <label>👤 Usuario:</label>
+                    <input type="text" id="loginUsername" placeholder="Ingresa tu usuario">
+                </div>
+                <div class="form-group">
+                    <label>🔑 Contraseña:</label>
+                    <input type="password" id="loginPassword" placeholder="Ingresa tu contraseña">
+                </div>
+                <button class="btn" onclick="loginUser()">🚀 Iniciar Sesión</button>
+            </div>
+
+            <!-- Register Form -->
+            <div class="auth-form" id="registerForm">
+                <div id="registerAlert"></div>
+                <div class="form-group">
+                    <label>👤 Usuario:</label>
+                    <input type="text" id="registerUsername" placeholder="Elige un usuario">
+                </div>
+                <div class="form-group">
+                    <label>🔑 Contraseña:</label>
+                    <input type="password" id="registerPassword" placeholder="Crea una contraseña">
+                </div>
+                <div class="form-group">
+                    <label>🔑 Confirmar Contraseña:</label>
+                    <input type="password" id="confirmPassword" placeholder="Confirma tu contraseña">
+                </div>
+                <button class="btn" onclick="registerUser()">📝 Registrarse</button>
+            </div>
+        </div>
+
+        <!-- Main App -->
+        <div class="main-app" id="mainApp">
+            <!-- User Info -->
+             <!-- Admin Panel (solo visible para administradores) -->
+<div class="admin-panel" id="adminPanel" style="display: none;">
+    <h2>🔧 PANEL DE ADMINISTRADOR</h2>
+    
+    <div class="admin-stats">
+        <div class="stat-card clickable-stat" onclick="showDetailedUsers()">
+            <span class="stat-number" id="totalUsers">0</span>
+            <span class="stat-text">👥 Usuarios Totales</span>
+        </div>
+        <div class="stat-card clickable-stat" onclick="showDetailedGangs()">
+            <span class="stat-number" id="totalGangs">0</span>
+            <span class="stat-text">🏴‍☠️ Pandillas Activas</span>
+        </div>
+        <div class="stat-card clickable-stat" onclick="showGangDetails()">
+            <span class="stat-number" id="avgMembers">0</span>
+            <span class="stat-text">📊 Promedio Miembros</span>
+        </div>
+    </div>
+    
+    <div class="admin-controls">
+    <button class="admin-btn" onclick="showUserManagement()">👥 Gestionar Usuarios</button>
+    <button class="admin-btn" onclick="showGangManagement()">🏴‍☠️ Gestionar Pandillas</button>
+    <button class="admin-btn" onclick="showSpyInventories()">👀 Espiar Inventarios</button>
+    <button class="admin-btn" onclick="showAllLogs()">📋 Ver Todos los Logs</button>
+    <button class="admin-btn" onclick="showNotificationSystem()">💬 Enviar Mensajes</button>
+    <button class="admin-btn" onclick="showAdvancedStats()">📊 Estadísticas Avanzadas</button>
+</div>
+
+<div class="ranking-section">
+    <h3 style="color: #ffd700; text-align: center; margin-bottom: 15px;">🏆 TOP 5 PANDILLAS POR VALOR</h3>
+    <div id="gangRanking"></div>
+</div>
+</div>
+            <div class="user-info">
+                <h3>👋 Bienvenido, <span id="currentUser"></span></h3>
+                <button class="btn btn-danger" onclick="logout()">🚪 Cerrar Sesión</button>
+            </div>
+
+            <!-- Gang Section -->
+            <div class="gang-section">
+                <h2>👥 Sistema de Pandillas</h2>
+                <div class="gang-controls">
+    <button class="btn btn-secondary" onclick="showCreateGangModal()">🏗️ Crear Pandilla</button>
+    <button class="btn btn-secondary" onclick="showJoinGangModal()">🤝 Unirse a Pandilla</button>
+    <button class="btn" onclick="showGangInfo()">📊 Info Pandilla</button>
+    <button class="btn" onclick="showLogs()">📋 Historial</button>
+    <button class="btn" onclick="showBlackMarket()" style="background: linear-gradient(45deg, #ff0080, #cc0066);">🌑 Mercado Negro</button>
+    <button class="btn" onclick="showMemberManagement()" id="manageMembersBtn" style="display: none;">👥 Gestionar Miembros</button>
+    <button class="btn btn-danger" onclick="leaveGang()" id="leaveGangBtn" style="display: none;">🚪 Salir de Pandilla</button>
+</div>
+                <div id="gangInfo"></div>
+            </div>
+
+            <!-- Inventory Section -->
+            <div class="inventory-section">
+                <h2>📦 Gestión de Inventario</h2>
+                
+                <!-- Category Buttons -->
+                <div class="category-buttons">
+                    <div class="category-btn" onclick="showCategory('armas')">🔫 Armas</div>
+                    <div class="category-btn" onclick="showCategory('cargadores')">📦 Cargadores</div>
+                    <div class="category-btn" onclick="showCategory('drogas')">💊 Drogas</div>
+                    <div class="category-btn" onclick="showCategory('planos')">🗺️ Planos</div>
+                    <div class="category-btn" onclick="showAllStock()">📊 Stock Completo</div>
+                </div>
+
+                <!-- Products Grid - Armas -->
+                <div class="products-grid" id="grid-armas"></div>
+                
+                <!-- Products Grid - Cargadores -->
+                <div class="products-grid" id="grid-cargadores"></div>
+                
+                <!-- Products Grid - Drogas -->
+                <div class="products-grid" id="grid-drogas"></div>
+                
+                <!-- Products Grid - Planos -->
+                <div class="products-grid" id="grid-planos"></div>
+
+                <!-- All Stock Grid -->
+                <div class="products-grid" id="grid-all"></div>
+            </div>
+        </div>
+
+        <!-- Modal for Operations -->
+        <div class="modal" id="operationModal">
+            <div class="modal-content">
+                <h3 id="modalTitle"></h3>
+                <div id="modalContent"></div>
+                <div class="quantity-buttons" id="quantityButtons" style="display: none;">
+                    <div class="qty-btn" onclick="executeOperation(1)">1</div>
+                    <div class="qty-btn" onclick="executeOperation(2)">2</div>
+                    <div class="qty-btn" onclick="executeOperation(3)">3</div>
+                    <div class="qty-btn" onclick="executeOperation(5)">5</div>
+                    <div class="qty-btn" onclick="executeOperation(10)">10</div>
+                    <div class="qty-btn" onclick="executeOperation(25)">25</div>
+                    <div class="qty-btn" onclick="executeOperation(50)">50</div>
+                </div>
+                <button class="btn btn-danger" onclick="closeModal()">❌ Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data Structure
+        const productos = {
+    'armas': { 
+        '<i class="fas fa-gun"></i>': 'glock',           // Pistola moderna (Glock)
+        '<i class="fas fa-hammer"></i>': 'vintage',       // Martillo (arma vintage/antigua)
+        '<i class="fas fa-bullseye"></i>': 'beretta',     // Diana/precisión (Beretta)
+        '<i class="fas fa-skull-crossbones"></i>': 'hachas', // Calavera con huesos (Hachas)
+        '<i class="fas fa-cut"></i>': 'machetes'          // Tijeras/corte (Machetes)
+    },
+    'cargadores': { 
+    '<i class="fas fa-layer-group"></i>': 'cargador pistolas', 
+    '<i class="fas fa-boxes"></i>': 'cargador subfusil' 
+},
+    'drogas': { 
+        '<i class="fas fa-smoking"></i>': 'bongs', 
+        '<i class="fas fa-pills"></i>': 'pcp', 
+        '<i class="fas fa-cookie-bite"></i>': 'galletas', 
+        '<i class="fas fa-syringe"></i>': 'fentanilo', 
+        '<i class="fas fa-cannabis"></i>': 'marihuana' 
+    },
+    'planos': { 
+        '<i class="fas fa-store"></i>': 'supermercado', 
+        '<i class="fas fa-gas-pump"></i>': 'gasolinera', 
+        '<i class="fas fa-gem"></i>': 'joyeria', 
+        '<i class="fas fa-cut"></i>': 'barberia', 
+        '<i class="fas fa-wine-bottle"></i>': 'licoreria', 
+        '<i class="fas fa-prescription-bottle"></i>': 'farmacia', 
+        '<i class="fas fa-drafting-compass"></i>': 'arquitectónico', 
+        '<i class="fas fa-tshirt"></i>': 'ropa', 
+        '<i class="fas fa-paint-brush"></i>': 'tatuajes'
+    }
+};
+
+        // Global variables
+        let currentUser = null;
+        let currentGang = null;
+        let currentOperation = null;
+        let currentProduct = null;
+
+        // Initialize app
+        function init() {
+    createAdminUser(); V4killa1312
+    loadUserData();
+    checkSession();
+}
+
+        // Auth Functions
+        function switchAuthTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.auth-form').forEach(form => form.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(tab + 'Form').classList.add('active');
+        }
+
+        function registerUser() {
+            const username = document.getElementById('registerUsername').value.trim();
+            const password = document.getElementById('registerPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            if (!username || !password || !confirmPassword) {
+                showAlert('registerAlert', 'Todos los campos son obligatorios', 'error');
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                showAlert('registerAlert', 'Las contraseñas no coinciden', 'error');
+                return;
+            }
+
+            if (password.length < 4) {
+                showAlert('registerAlert', 'La contraseña debe tener al menos 4 caracteres', 'error');
+                return;
+            }
+
+            const users = JSON.parse(localStorage.getItem('users') || '{}');
+            
+            if (users[username]) {
+                showAlert('registerAlert', 'El usuario ya existe', 'error');
+                return;
+            }
+
+            users[username] = {
+                password: password,
+                createdAt: new Date().toISOString(),
+                gang: null
+            };
+
+            localStorage.setItem('users', JSON.stringify(users));
+            showAlert('registerAlert', '¡Usuario registrado exitosamente!', 'success');
+            
+            setTimeout(() => {
+                switchAuthTab('login');
+            }, 1500);
+        }
+
+        function loginUser() {
+            const username = document.getElementById('loginUsername').value.trim();
+            const password = document.getElementById('loginPassword').value;
+
+            if (!username || !password) {
+                showAlert('loginAlert', 'Ingresa usuario y contraseña', 'error');
+                return;
+            }
+
+            const users = JSON.parse(localStorage.getItem('users') || '{}');
+            
+            const bannedUsers = JSON.parse(localStorage.getItem('bannedUsers') || '[]');
+    
+if (bannedUsers.includes(username)) {
+    showAlert('loginAlert', 'Tu cuenta ha sido suspendida por un administrador', 'error');
+    return;
+}
+
+if (!users[username] || users[username].password !== password) {
+                showAlert('loginAlert', 'Usuario o contraseña incorrectos', 'error');
+                return;
+            }
+
+            currentUser = username;
+            currentGang = users[username].gang;
+            localStorage.setItem('currentSession', username);
+            
+            showMainApp();
+        }
+
+        function logout() {
+            currentUser = null;
+            currentGang = null;
+            localStorage.removeItem('currentSession');
+            
+            document.getElementById('authSection').style.display = 'block';
+            document.getElementById('mainApp').classList.remove('active');
+            
+            // Clear forms
+            document.getElementById('loginUsername').value = '';
+            document.getElementById('loginPassword').value = '';
+        }
+
+        function checkSession() {
+            const session = localStorage.getItem('currentSession');
+            if (session) {
+                const users = JSON.parse(localStorage.getItem('users') || '{}');
+                if (users[session]) {
+                    currentUser = session;
+                    currentGang = users[session].gang;
+                    showMainApp();
+                }
+            }
+        }
+
+        function showMainApp() {
+    document.getElementById('authSection').style.display = 'none';
+    document.getElementById('mainApp').classList.add('active');
+    document.getElementById('currentUser').textContent = currentUser;
+    
+    // Verificar si es administrador
+    if (currentUser === 'V4killa1312') {
+        document.getElementById('adminPanel').style.display = 'block';
+        loadAdminStats();
+    } else {
+        document.getElementById('adminPanel').style.display = 'none';
+    }
+    
+    loadGangInfo();
+    loadInventory();
+    initializeProducts();
+    actualizarValorTotal();
+}
+
+        function showAlert(containerId, message, type) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = `<div class="alert alert-${type}">${message}</div>`;
+            
+            setTimeout(() => {
+                container.innerHTML = '';
+            }, 3000);
+        }
+
+        // Gang Functions
+        function showCreateGangModal() {
+            const modalContent = `
+                <div class="form-group">
+                    <label>🏷️ Nombre de la Pandilla:</label>
+                    <input type="text" id="gangName" placeholder="Ej: Los Santos Vagos">
+                </div>
+                <button class="btn btn-secondary" onclick="createGang()">🏗️ Crear Pandilla</button>
+            `;
+            
+            document.getElementById('modalTitle').textContent = '🏗️ Crear Nueva Pandilla';
+            document.getElementById('modalContent').innerHTML = modalContent;
+            document.getElementById('quantityButtons').style.display = 'none';
+            document.getElementById('operationModal').classList.add('active');
+        }
+
+        function showJoinGangModal() {
+            const modalContent = `
+                <div class="form-group">
+                    <label>🔑 Código de Invitación:</label>
+                    <input type="text" id="gangCode" placeholder="Ingresa el código">
+                </div>
+                <button class="btn btn-secondary" onclick="joinGang()">🤝 Unirse</button>
+            `;
+            
+            document.getElementById('modalTitle').textContent = '🤝 Unirse a Pandilla';
+            document.getElementById('modalContent').innerHTML = modalContent;
+            document.getElementById('quantityButtons').style.display = 'none';
+            document.getElementById('operationModal').classList.add('active');
+        }
+
+        function createGang() {
+            const gangName = document.getElementById('gangName').value.trim();
+            
+            if (!gangName) {
+                alert('Ingresa un nombre para la pandilla');
+                return;
+            }
+
+            const gangs = JSON.parse(localStorage.getItem('gangs') || '{}');
+            const gangCode = generateGangCode();
+
+            if (Object.values(gangs).find(g => g.name === gangName)) {
+                alert('Ya existe una pandilla con ese nombre');
+                return;
+            }
+
+           gangs[gangCode] = {
+    name: gangName,
+    leader: currentUser,
+    members: [currentUser],
+    inventory: initializeGangInventory(),
+    createdAt: new Date().toISOString()
+};
+
+// Establecer rol de líder
+gangs[gangCode].inventory.members[currentUser] = 'lider';
+
+            localStorage.setItem('gangs', JSON.stringify(gangs));
+            
+            // Update user
+            const users = JSON.parse(localStorage.getItem('users') || '{}');
+            users[currentUser].gang = gangCode;
+            localStorage.setItem('users', JSON.stringify(users));
+            
+            currentGang = gangCode;
+            closeModal();
+            loadGangInfo();
+            loadInventory();
+            
+            alert(`¡Pandilla "${gangName}" creada! Código: ${gangCode}`);
+        }
+
+        function joinGang() {
+            const gangCode = document.getElementById('gangCode').value.trim().toUpperCase();
+            
+            if (!gangCode) {
+                alert('Ingresa un código de pandilla');
+                return;
+            }
+
+            const gangs = JSON.parse(localStorage.getItem('gangs') || '{}');
+            
+            if (!gangs[gangCode]) {
+                alert('Código de pandilla inválido');
+                return;
+            }
+
+            if (gangs[gangCode].members.includes(currentUser)) {
+                alert('Ya eres miembro de esta pandilla');
+                return;
+            }
+
+            gangs[gangCode].members.push(currentUser);
+            // Establecer rol de miembro normal
+gangs[gangCode].inventory.members[currentUser] = 'miembro';
+            localStorage.setItem('gangs', JSON.stringify(gangs));
+            
+            // Update user
+            const users = JSON.parse(localStorage.getItem('users') || '{}');
+            users[currentUser].gang = gangCode;
+            localStorage.setItem('users', JSON.stringify(users));
+            
+            currentGang = gangCode;
+            closeModal();
+            loadGangInfo();
+            loadInventory();
+            
+            alert(`¡Te has unido a "${gangs[gangCode].name}"!`);
+        }
+
+        function leaveGang() {
+            if (!confirm('¿Estás seguro que quieres salir de la pandilla?')) return;
+
+            const gangs = JSON.parse(localStorage.getItem('gangs') || '{}');
+            const gang = gangs[currentGang];
+            
+            // Remove from members
+            gang.members = gang.members.filter(member => member !== currentUser);
+            
+            // If was leader and there are other members, assign new leader
+            if (gang.leader === currentUser && gang.members.length > 0) {
+                gang.leader = gang.members[0];
+            }
+            
+            // If no members left, delete gang
+            if (gang.members.length === 0) {
+                delete gangs[currentGang];
+            } else {
+                gangs[currentGang] = gang;
+            }
+            
+            localStorage.setItem('gangs', JSON.stringify(gangs));
+            
+            // Update user
+            const users = JSON.parse(localStorage.getItem('users') || '{}');
+            users[currentUser].gang = null;
+            localStorage.setItem('users', JSON.stringify(users));
+            
+            currentGang = null;
+            loadGangInfo();
+            loadInventory();
+            
+            alert('Has salido de la pandilla');
+        }
+
+        function loadGangInfo() {
+            const gangInfo = document.getElementById('gangInfo');
+            const leaveBtn = document.getElementById('leaveGangBtn');
+            
+            if (!currentGang) {
+                gangInfo.innerHTML = '<p style="color: #ffff00;">No perteneces a ninguna pandilla</p>';
+                leaveBtn.style.display = 'none';
+                return;
+            }
+
+            const gangs = JSON.parse(localStorage.getItem('gangs') || '{}');
+            const gang = gangs[currentGang];
+            
+            if (!gang) {
+                currentGang = null;
+                loadGangInfo();
+                return;
+            }
+
+            const isLeader = gang.leader === currentUser;
+            
+            let membersHtml = '<div class="gang-members"><h4>👥 Miembros:</h4>';
+            gang.members.forEach(member => {
+    const memberRole = gang.inventory.members?.[member] || 'miembro';
+    let roleDisplay = '👤 Miembro';
+    if (memberRole === 'lider') roleDisplay = '👑 Líder';
+    else if (memberRole === 'sublider') roleDisplay = '🔱 Sublíder';
+    
+    membersHtml += `
+        <div class="member-item">
+            <div class="member-info">${member}</div>
+            <div class="member-role">${roleDisplay}</div>
+        </div>
+    `;
+});
+            membersHtml += '</div>';
+
+            membersHtml += '</div>';
+
+// NUEVO: Agregar valor total del inventario
+const valorTotal = calcularValorTotal();
+const valorTotalHtml = `
+    <div class="valor-total" id="valorTotal">
+        <h4>💰 Valor Total del Inventario</h4>
+        <div class="monto" id="montoTotal">$${valorTotal.toLocaleString()}</div>
+    </div>
+`;
+
+gangInfo.innerHTML = `
+    <div style="color: #9b59b6;">
+        <h3>🏷️ ${gang.name} (Código: ${currentGang})</h3>
+        <p>👑 Líder: ${gang.leader}</p>
+    </div>
+    ${membersHtml}
+    ${valorTotalHtml}
+`;
+            
+            leaveBtn.style.display = 'block';
+
+// Mostrar botón de gestión solo para líderes
+const manageMembersBtn = document.getElementById('manageMembersBtn');
+if (isLeader) {
+    manageMembersBtn.style.display = 'block';
+} else {
+    manageMembersBtn.style.display = 'none';
+}
+        }
+
+        function showGangInfo() {
+            if (!currentGang) {
+                alert('No perteneces a ninguna pandilla');
+                return;
+            }
+            loadGangInfo();
+        }
+
+        // ===============================================
+        // 🚨 AQUÍ EMPIEZAN LAS FUNCIONES QUE FALTAN 🚨
+        // ===============================================
+
+        // 1. 🎯 generateGangCode() - Genera códigos únicos para pandillas
+        function generateGangCode() {
+            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let result = '';
+            
+            for (let i = 0; i < 6; i++) {
+                const randomIndex = Math.floor(Math.random() * characters.length);
+                result += characters[randomIndex];
+            }
+            
+            return result;
+        }
+        // NUEVA FUNCIÓN: Calcular valor total del inventario
+function calcularValorTotal() {
+    if (!currentGang) return 0;
+    
+    const gangs = JSON.parse(localStorage.getItem('gangs') || '{}');
+    const gang = gangs[currentGang];
+    
+    if (!gang || !gang.inventory || !gang.inventory.items) return 0;
+    
+    let valorTotal = 0;
+    
+    Object.entries(gang.inventory.items).forEach(([producto, datos]) => {
+        const cantidad = Number(datos.quantity || datos.cantidad || 0);
+        const precio = Number(datos.price || datos.precio || 0);
+        valorTotal += cantidad * precio;
+    });
+    
+    return valorTotal;
+}
+
+// NUEVA FUNCIÓN: Actualizar display del valor total
+function actualizarValorTotal() {
+    const valorTotalElement = document.getElementById('valorTotal');
+    if (valorTotalElement) {
+        const valorTotal = calcularValorTotal();
+        document.getElementById('montoTotal').textContent = `$${valorTotal.toLocaleString()}`;
+    }
+}
+
+        // 2. 📦 initializeGangInventory() - Crea inventario vacío para pandillas nuevas
+        function initializeGangInventory() {
+    const baseItems = {
+        // Armas
+        'glock': { quantity: 0, price: 5000 },
+        'vintage': { quantity: 0, price: 8000 },
+        'beretta': { quantity: 0, price: 6000 },
+        'hachas': { quantity: 0, price: 2000 },
+        'machetes': { quantity: 0, price: 1500 },
+        
+        // Cargadores
+        'cargador pistolas': { quantity: 0, price: 500 },
+        'cargador subfusil': { quantity: 0, price: 800 },
+        
+        // Drogas
+        'bongs': { quantity: 0, price: 1000 },
+        'pcp': { quantity: 0, price: 3000 },
+        'galletas': { quantity: 0, price: 800 },
+        'fentanilo': { quantity: 0, price: 4000 },
+        'marihuana': { quantity: 0, price: 1200 },
+        
+        // Planos
+        'supermercado': { quantity: 0, price: 10000 },
+        'gasolinera': { quantity: 0, price: 12000 },
+        'joyeria': { quantity: 0, price: 15000 },
+        'barberia': { quantity: 0, price: 8000 },
+        'licoreria': { quantity: 0, price: 9000 },
+        'farmacia': { quantity: 0, price: 11000 },
+        'arquitectónico': { quantity: 0, price: 20000 },
+        'ropa': { quantity: 0, price: 7000 },
+        'tatuajes': { quantity: 0, price: 6000 }
+    };
+    
+    return {
+        items: baseItems,
+        logs: [],
+        members: {}
+    };
+}
+
+        // 3. 🔄 loadInventory() - Carga el inventario en pantalla
+        function loadInventory() {
+    if (!currentGang) {
+        clearAllGrids();
+        return;
+    }
+    
+    const gangs = JSON.parse(localStorage.getItem('gangs') || '{}');
+    const gang = gangs[currentGang];
+    
+    if (!gang) {
+        clearAllGrids();
+        return;
+    }
+    
+    // Migrar inventario antiguo si es necesario
+    if (!gang.inventory.items) {
+        gang.inventory = migrateOldInventory(gang.inventory);
+        localStorage.setItem('gangs', JSON.stringify(gangs));
+    }
+    
+    updateCategoryGrid('armas', gang.inventory.items);
+    updateCategoryGrid('cargadores', gang.inventory.items);
+    updateCategoryGrid('drogas', gang.inventory.items);
+    updateCategoryGrid('planos', gang.inventory.items);
+}
+
+        // 4. 🎨 initializeProducts() - Crea las tarjetas de productos
+        function initializeProducts() {
+    Object.keys(productos).forEach(category => {
+        const grid = document.getElementById(`grid-${category}`);
+        if (!grid) return;
+        
+        grid.innerHTML = '';
+        
+        Object.entries(productos[category]).forEach(([emoji, name]) => {
+            const productCard = createProductCard(emoji, name, category, { quantity: 0, price: 0 });
+            grid.appendChild(productCard);
+        });
+    });
+}
+
+        // 5. 📂 showCategory() - Muestra una categoría específica
+        function showCategory(category) {
+            document.querySelectorAll('.products-grid').forEach(grid => {
+                grid.classList.remove('active');
+            });
+            
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            const targetGrid = document.getElementById(`grid-${category}`);
+            if (targetGrid) {
+                targetGrid.classList.add('active');
+            }
+            
+            event.target.classList.add('active');
+        }
+
+        // 6. 📊 showAllStock() - Muestra todos los productos juntos
+        function showAllStock() {
+            document.querySelectorAll('.products-grid').forEach(grid => {
+                if (grid.id !== 'grid-all') {
+                    grid.classList.remove('active');
+                }
+            });
+            
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            event.target.classList.add('active');
+            
+            const allGrid = document.getElementById('grid-all');
+            allGrid.classList.add('active');
+            allGrid.innerHTML = '';
+            
+            if (!currentGang) return;
+            
+            const gangs = JSON.parse(localStorage.getItem('gangs') || '{}');
+            const gang = gangs[currentGang];
+            if (!gang) return;
+            
+            Object.keys(productos).forEach(category => {
+    Object.entries(productos[category]).forEach(([emoji, name]) => {
+        const itemData = gang.inventory.items[name] || { quantity: 0, price: 0 };
+        const productCard = createProductCard(emoji, name, category, itemData);
+        allGrid.appendChild(productCard);
+    });
+});
+        }
+
+        // 7. ⚡ executeOperation() - Ejecuta agregar/quitar items
+        function executeOperation(quantity) {
+    if (!currentGang || !currentOperation || !currentProduct) {
+        alert('Error: Faltan datos para la operación');
+        return;
+    }
+    
+    const gangs = JSON.parse(localStorage.getItem('gangs') || '{}');
+    const gang = gangs[currentGang];
+    
+    if (!gang) {
+        alert('Error: Pandilla no encontrada');
+        return;
+    }
+    
+    // Asegurar que existe la estructura de items
+    if (!gang.inventory.items) {
+        gang.inventory = migrateOldInventory(gang.inventory);
+    }
+    
+    const currentItem = gang.inventory.items[currentProduct] || { quantity: 0, price: 0 };
+    let newQuantity;
+    
+    if (currentOperation === 'add') {
+        newQuantity = currentItem.quantity + quantity;
+    } else if (currentOperation === 'remove') {
+        newQuantity = Math.max(0, currentItem.quantity - quantity);
+    } else {
+        alert('Operación no válida');
+        return;
+    }
+    
+    // Actualizar cantidad
+    gang.inventory.items[currentProduct].quantity = newQuantity;
+    
+    // Agregar log
+    const logEntry = {
+        timestamp: new Date().toISOString(),
+        user: currentUser,
+        action: currentOperation === 'add' ? 'Agregó' : 'Quitó',
+        item: currentProduct,
+        quantity: quantity,
+        newTotal: newQuantity
+    };
+    
+    if (!gang.inventory.logs) gang.inventory.logs = [];
+    gang.inventory.logs.unshift(logEntry); // Agregar al inicio
+    
+    // Mantener solo los últimos 50 logs
+    if (gang.inventory.logs.length > 50) {
+        gang.inventory.logs = gang.inventory.logs.slice(0, 50);
+    }
+    
+    localStorage.setItem('gangs', JSON.stringify(gangs));
+    
+    loadInventory();
+    closeModal();
+    
+    const action = currentOperation === 'add' ? 'agregado' : 'removido';
+    alert(`${quantity} ${currentProduct} ${action} exitosamente`);
+    // Actualizar stats de admin si está visible
+if (currentUser === 'V4killa1312' && document.getElementById('adminPanel').style.display !== 'none') {
+    loadAdminStats();
+}
+}
+
+        // 8. ❌ closeModal() - Cierra las ventanas emergentes
+        function closeModal() {
+            const modal = document.getElementById('operationModal');
+            modal.classList.remove('active');
+            
+            currentOperation = null;
+            currentProduct = null;
+            
+            document.getElementById('modalTitle').textContent = '';
+            document.getElementById('modalContent').innerHTML = '';
+            document.getElementById('quantityButtons').style.display = 'none';
+        }
+
+        // ===============================================
+        // 🛠️ FUNCIONES AUXILIARES (también necesarias)
+        // ===============================================
+
+        function clearAllGrids() {
+            document.querySelectorAll('.products-grid').forEach(grid => {
+                grid.innerHTML = '';
+                grid.classList.remove('active');
+            });
+        }
+
+        function updateCategoryGrid(category, inventory) {
+    const grid = document.getElementById(`grid-${category}`);
+    if (!grid) return;
+    
+    grid.innerHTML = '';
+    
+    Object.entries(productos[category]).forEach(([emoji, name]) => {
+        const itemData = inventory[name] || { quantity: 0, price: 0 };
+        const productCard = createProductCard(emoji, name, category, itemData);
+        grid.appendChild(productCard);
+    });
+}
+
+        function createProductCard(emoji, name, category, itemData) {
+    const card = document.createElement('div');
+    card.className = 'product-card';
+    
+    const quantity = itemData ? itemData.quantity : 0;
+    const price = itemData ? itemData.price : 0;
+    
+    let stockClass = 'stock-normal';
+    if (quantity === 0) stockClass = 'stock-empty';
+    else if (quantity < 5) stockClass = 'stock-low';
+    
+    card.classList.add(stockClass);
+    
+    // Verificar permisos para cambiar precios
+    const canChangePrice = canUserChangePrice();
+    
+    card.innerHTML = `
+        <div class="product-header">
+            <span class="product-emoji">${emoji}</span>
+            <span class="product-name">${name}</span>
+        </div>
+        <div class="product-stats">
+            <div class="stat-row">
+                <span class="stat-label">📦 Stock:</span>
+                <span class="stat-value">${quantity}</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-label">💰 Precio:</span>
+                <span class="stat-value">$${price.toLocaleString()}</span>
+            </div>
+        </div>
+        <div class="product-actions">
+            <button class="action-btn btn-add" onclick="showQuantityModal('add', '${name}')">➕ Agregar</button>
+            <button class="action-btn btn-remove" onclick="showQuantityModal('remove', '${name}')">➖ Quitar</button>
+            ${canChangePrice ? `<button class="action-btn btn-price" onclick="showPriceModal('${name}')">💰 Precio</button>` : ''}
+        </div>
+    `;
+    
+    return card;
+}
+
+        function showQuantityModal(operation, productName) {
+            if (!currentGang) {
+                alert('Necesitas estar en una pandilla para gestionar inventario');
+                return;
+            }
+            
+            currentOperation = operation;
+            currentProduct = productName;
+            
+            const action = operation === 'add' ? 'Agregar' : 'Quitar';
+            const emoji = operation === 'add' ? '➕' : '➖';
+            
+            document.getElementById('modalTitle').textContent = `${emoji} ${action} ${productName}`;
+            document.getElementById('modalContent').innerHTML = `
+                <p>Selecciona la cantidad a ${action.toLowerCase()}:</p>
+            `;
+            document.getElementById('quantityButtons').style.display = 'grid';
+            document.getElementById('operationModal').classList.add('active');
+        }
+
+        function loadUserData() {
+            // Esta función puede estar vacía por ahora
+            // Se usaría para cargar datos adicionales del usuario
+        }
+
+        // ===============================================
+// 🔧 FUNCIONES DE ADMINISTRADOR
+// ===============================================
+
+// ===============================================
+// 🔧 FUNCIONES DE ADMINISTRADOR
+// ===============================================
+
+function loadAdminStats() {
+    const users = JSON.parse(localStorage.getItem('users') || '{}');
+    const gangs = JSON.parse(localStorage.getItem('gangs') || '{}');
+    
+    const totalUsers = Object.keys(users).length;
+    const totalGangs = Object.keys(gangs).length;
+    
+    let totalMembers = 0;
+    Object.values(gangs).forEach(gang => {
+        totalMembers += gang.members.length;
+    });
+    
+    const avgMembers = totalGangs > 0 ? Math.round(totalMembers / totalGangs) : 0;
+    
+    document.getElementById('totalUsers').textContent = totalUsers;
+    document.getElementById('totalGangs').textContent = totalGangs;
+    document.getElementById('avgMembers').textContent = avgMembers;
+    
+    generateGangRanking(gangs);
+}
+
+function generateGangRanking(gangs) {
+    const gangValues = [];
+    
+    Object.entries(gangs).forEach(([code, gang]) => {
+        let totalValue = 0;
+        
+        if (gang.inventory && gang.inventory.items) {
+            Object.entries(gang.inventory.items).forEach(([item, data]) => {
+                const quantity = Number(data.quantity || 0);
+                const price = Number(data.price || 0);
+                totalValue += quantity * price;
+            });
+        }
+        
+        gangValues.push({
+            name: gang.name,
+            code: code,
+            value: totalValue,
+            members: gang.members.length,
+            leader: gang.leader
+        });
+    });
+    
+    gangValues.sort((a, b) => b.value - a.value);
+    const top5 = gangValues.slice(0, 5);
+    
+    let rankingHtml = '';
+    
+    if (top5.length === 0) {
+        rankingHtml = '<p style="color: #ffff00; text-align: center;">No hay pandillas registradas</p>';
+    } else {
+        top5.forEach((gang, index) => {
+            const position = index + 1;
+            let medal = '';
+            
+            switch(position) {
+                case 1: medal = '🥇'; break;
+                case 2: medal = '🥈'; break;
+                case 3: medal = '🥉'; break;
+                default: medal = `#${position}`;
+            }
+            
+            rankingHtml += `
+                <div class="ranking-item">
+                    <span class="ranking-position">${medal}</span>
+                    <div class="ranking-gang">
+                        <div>${gang.name}</div>
+                        <div style="font-size: 12px; color: #9b59b6;">👑 ${gang.leader} | 👥 ${gang.members} miembros</div>
+                    </div>
+                    <span class="ranking-value">$${gang.value.toLocaleString()}</span>
+                </div>
+            `;
+        });
+    }
+    
+    document.getElementById('gangRanking').innerHTML = rankingHtml;
+}
+
+function createAdminUser() {
+    const users = JSON.parse(localStorage.getItem('users') || '{}');
+    
+    if (!users['V4killa1312']) {
+        users['V4killa1312'] = {
+            password: 'Enelbellaqueo1',
+            createdAt: new Date().toISOString(),
+            gang: null,
+            isAdmin: true
+        };
+        
+        localStorage.setItem('users', JSON.stringify(users));
+    }
+}
+
+// 👥 GESTIÓN DE USUARIOS
+function showUserManagement() {
+    const users = JSON.parse(localStorage.getItem('users') || '{}');
+    const bannedUsers = JSON.parse(localStorage.getItem('bannedUsers') || '[]');
+    
+    let usersHtml = '<div class="user-list">';
+    
+    Object.entries(users).forEach(([username, userData]) => {
+        if (username === 'V4killa1312') return; // No mostrar admin
+        
+        const isBanned = bannedUsers.includes(username);
+        const gangInfo = userData.gang ? `🏴‍☠️ ${userData.gang}` : '🚫 Sin pandilla';
+        
+        usersHtml += `
+            <div class="list-item ${isBanned ? 'banned-user' : ''}">
+                <div class="item-info">
+                    <div style="color: ${isBanned ? '#ff3030' : '#00ff41'};">${username}</div>
+                    <div style="font-size: 12px; color: #ffff00;">${gangInfo}</div>
+                    <div style="font-size: 10px; color: #999;">Registrado: ${new Date(userData.createdAt).toLocaleDateString()}</div>
+                </div>
+                <div class="item-actions">
+                    <button class="mini-btn" style="border-color: #ff3030; color: #ff3030;" onclick="deleteUser('${username}')">🗑️ Eliminar</button>
+                    <button class="mini-btn" style="border-color: ${isBanned ? '#00ff41' : '#ff3030'}; color: ${isBanned ? '#00ff41' : '#ff3030'};" onclick="${isBanned ? 'unbanUser' : 'banUser'}('${username}')">${isBanned ? '✅ Desbanear' : '🔒 Banear'}</button>
+                </div>
+            </div>
+        `;
+    });
+    
+    usersHtml += '</div>';
+    
+    document.getElementById('modalTitle').textContent = '👥 Gestión de Usuarios';
+    document.getElementById('modalContent').innerHTML = usersHtml;
+    document.getElementById('quantityButtons').style.display = 'none';
+    document.getElementById('operationModal').classList.add('active');
+}
+
+// 🏴‍☠️ GESTIÓN DE PANDILLAS
+function showGangManagement() {
+    const gangs = JSON.parse(localStorage.getItem('gangs') || '{}');
+    
+    let gangsHtml = '<div class="gang-list">';
+    
+    Object.entries(gangs).forEach(([code, gang]) => {
+        const totalValue = calculateGangValue(gang);
+        
+        gangsHtml += `
+            <div class="list-item">
+                <div class="item-info">
+                    <div style="color: #9b59b6;">${gang.name}</div>
+                    <div style="font-size: 12px; color: #ffff00;">👑 ${gang.leader} | 👥 ${gang.members.length} miembros</div>
+                    <div style="font-size: 12px; color: #00ff41;">💰 $${totalValue.toLocaleString()} | 📅 ${new Date(gang.createdAt).toLocaleDateString()}</div>
+                    <div style="font-size: 10px; color: #999;">Código: ${code}</div>
+                </div>
+                <div class="item-actions">
+                    <button class="mini-btn" style="border-color: #00ff41; color: #00ff41;" onclick="spyGangInventory('${code}')">👀 Espiar</button>
+                    <button class="mini-btn" style="border-color: #ff3030; color: #ff3030;" onclick="deleteGang('${code}')">🗑️ Eliminar</button>
+                </div>
+            </div>
+        `;
+    });
+    
+    gangsHtml += '</div>';
+    
+    document.getElementById('modalTitle').textContent = '🏴‍☠️ Gestión de Pandillas';
+    document.getElementById('modalContent').innerHTML = gangsHtml;
+    document.getElementById('quantityButtons').style.display = 'none';
+    document.getElementById('operationModal').classList.add('active');
+}
+
+// 👀 ESPIAR INVENTARIOS
+function showSpyInventories() {
+    const gangs = JSON.parse(localStorage.getItem('gangs') || '{}');
+    
+    if (Object.keys(gangs).length === 0) {
+        alert('No hay pandillas para espiar');
+        return;
+    }
+    
+    let selectHtml = `
+        <div class="form-group">
+            <label>🏴‍☠️ Selecciona Pandilla:</label>
+            <select id="spyGangSelect" style="width: 100%; padding: 10px; background: rgba(0,0,0,0.7); border: 2px solid #00ff41; border-radius: 8px; color: #00ff41;">
+                <option value="">-- Selecciona una pandilla --</option>
+    `;
+    
+    Object.entries(gangs).forEach(([code, gang]) => {
+        selectHtml += `<option value="${code}">${gang.name} (${gang.members.length} miembros)</option>`;
+    });
+    
+    selectHtml += `
+            </select>
+        </div>
+        <button class="btn btn-secondary" onclick="executeSpyInventory()">👀 Espiar Inventario</button>
+        <div id="spyResults"></div>
+    `;
+    
+    document.getElementById('modalTitle').textContent = '👀 Espiar Inventarios';
+    document.getElementById('modalContent').innerHTML = selectHtml;
+    document.getElementById('quantityButtons').style.display = 'none';
+    document.getElementById('operationModal').classList.add('active');
+}
+
+function executeSpyInventory() {
+    const selectedGang = document.getElementById('spyGangSelect').value;
+    if (!selectedGang) {
+        alert('Selecciona una pandilla');
+        return;
+    }
+    
+    spyGangInventory(selectedGang, false);
+}
+
+function spyGangInventory(gangCode, closeModal = true) {
+    const gangs = JSON.parse(localStorage.getItem('gangs') || '{}');
+    const gang = gangs[gangCode];
+    
+    if (!gang) {
+        alert('Pandilla no encontrada');
+        return;
+    }
+    
+    let inventoryHtml = `
+        <h3 style="color: #9b59b6; text-align: center;">🏴‍☠️ ${gang.name}</h3>
+        <p style="text-align: center; color: #ffff00;">👑 Líder: ${gang.leader} | 👥 ${gang.members.length} miembros</p>
+        <div class="spy-inventory">
+    `;
+    
+    const categories = ['armas', 'cargadores', 'drogas', 'planos'];
+    
+    categories.forEach(category => {
+        inventoryHtml += `<div class="spy-category"><h4>📦 ${category.toUpperCase()}</h4>`;
+        
+        let hasItems = false;
+        Object.entries(productos[category]).forEach(([emoji, name]) => {
+            const itemData = gang.inventory.items[name];
+            if (itemData && itemData.quantity > 0) {
+                hasItems = true;
+                inventoryHtml += `
+                    <div class="spy-item">
+                        <span>${emoji} ${name}</span>
+                        <span style="color: #ffff00;">📦 ${itemData.quantity} | 💰 $${itemData.price.toLocaleString()}</span>
+                    </div>
+                `;
+            }
+        });
+        
+        if (!hasItems) {
+            inventoryHtml += '<p style="color: #666; font-style: italic;">Sin items</p>';
+        }
+        
+        inventoryHtml += '</div>';
+    });
+    
+    const totalValue = calculateGangValue(gang);
+    inventoryHtml += `</div><div style="text-align: center; color: #ffd700; font-size: 18px; font-weight: bold;">💰 VALOR TOTAL: $${totalValue.toLocaleString()}</div>`;
+    
+    if (closeModal) {
+        document.getElementById('modalTitle').textContent = `👀 Inventario de ${gang.name}`;
+        document.getElementById('modalContent').innerHTML = inventoryHtml;
+        document.getElementById('quantityButtons').style.display = 'none';
+        document.getElementById('operationModal').classList.add('active');
+    } else {
+        document.getElementById('spyResults').innerHTML = inventoryHtml;
+    }
+}
+
+// 📋 VER TODOS LOS LOGS
+function showAllLogs() {
+    const gangs = JSON.parse(localStorage.getItem('gangs') || '{}');
+    let allLogs = [];
+    
+    Object.entries(gangs).forEach(([code, gang]) => {
+        if (gang.inventory.logs) {
+            gang.inventory.logs.forEach(log => {
+                allLogs.push({
+                    ...log,
+                    gangName: gang.name,
+                    gangCode: code
+                });
+            });
+        }
+    });
+    
+    allLogs.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+    
+    let logsHtml = '<div style="max-height: 400px; overflow-y: auto;">';
+    
+    if (allLogs.length === 0) {
+        logsHtml += '<p style="color: #ffff00; text-align: center;">No hay logs disponibles</p>';
+    } else {
+        allLogs.slice(0, 100).forEach(log => { // Mostrar últimos 100
+            const date = new Date(log.timestamp).toLocaleString();
+            let logText = '';
+            
+            if (log.action === 'Cambió precio') {
+                logText = `💰 ${log.user} cambió precio de ${log.item} de $${log.oldPrice?.toLocaleString() || 0} a $${log.newPrice?.toLocaleString() || 0}`;
+            } else if (log.action === 'Cambió rol') {
+                logText = `👑 ${log.user} cambió rol de ${log.member} de ${log.oldRole} a ${log.newRole}`;
+            } else {
+                logText = `📦 ${log.user} ${log.action.toLowerCase()} ${log.quantity} ${log.item} (Total: ${log.newTotal})`;
+            }
+            
+            logsHtml += `
+                <div style="border-bottom: 1px solid #333; padding: 8px 0; font-size: 14px;">
+                    <div style="color: #9b59b6; font-weight: bold;">[${log.gangName}]</div>
+                    <div style="color: #ffff00; font-size: 12px;">${date}</div>
+                    <div style="color: #00ff41;">${logText}</div>
+                </div>
+            `;
+        });
+    }
+    
+    logsHtml += '</div>';
+    
+    document.getElementById('modalTitle').textContent = '📋 Historial Global de Actividades';
+    document.getElementById('modalContent').innerHTML = logsHtml;
+    document.getElementById('quantityButtons').style.display = 'none';
+    document.getElementById('operationModal').classList.add('active');
+}
+
+// 🗑️ ELIMINAR USUARIOS
+function deleteUser(username) {
+    if (!confirm(`¿Estás seguro de eliminar al usuario "${username}"? Esta acción no se puede deshacer.`)) {
+        return;
+    }
+    
+    const users = JSON.parse(localStorage.getItem('users') || '{}');
+    const gangs = JSON.parse(localStorage.getItem('gangs') || '{}');
+    
+    // Remover de pandillas
+    Object.entries(gangs).forEach(([code, gang]) => {
+        if (gang.members.includes(username)) {
+            gang.members = gang.members.filter(member => member !== username);
+            
+            // Si era líder, asignar nuevo líder o eliminar pandilla
+            if (gang.leader === username) {
+                if (gang.members.length > 0) {
+                    gang.leader = gang.members[0];
+                } else {
+                    delete gangs[code];
+                    return;
+                }
+            }
+            
+            // Remover de miembros del inventario
+            if (gang.inventory.members) {
+                delete gang.inventory.members[username];
+            }
+        }
+    });
+    
+    delete users[username];
+    
+    localStorage.setItem('users', JSON.stringify(users));
+    localStorage.setItem('gangs', JSON.stringify(gangs));
+    
+    alert(`Usuario "${username}" eliminado exitosamente`);
+    loadAdminStats();
+    showUserManagement(); // Refresh the list
+}
+
+// 🔒 BANEAR/DESBANEAR USUARIOS
+function banUser(username) {
+    if (!confirm(`¿Banear al usuario "${username}"? No podrá iniciar sesión.`)) {
+        return;
+    }
+    
+    const bannedUsers = JSON.parse(localStorage.getItem('bannedUsers') || '[]');
+    if (!bannedUsers.includes(username)) {
+        bannedUsers.push(username);
+        localStorage.setItem('bannedUsers', JSON.stringify(bannedUsers));
+    }
+    
+    alert(`Usuario "${username}" baneado`);
+    showUserManagement();
+}
+
+function unbanUser(username) {
+    const bannedUsers = JSON.parse(localStorage.getItem('bannedUsers') || '[]');
+    const newBannedUsers = bannedUsers.filter(user => user !== username);
+    localStorage.setItem('bannedUsers', JSON.stringify(newBannedUsers));
+    
+    alert(`Usuario "${username}" desbaneado`);
+    showUserManagement();
+}
+
+// 🏴‍☠️ ELIMINAR PANDILLAS
+function deleteGang(gangCode) {
+    const gangs = JSON.parse(localStorage.getItem('gangs') || '{}');
+    const gang = gangs[gangCode];
+    
+    if (!gang) {
+        alert('Pandilla no encontrada');
+        return;
+    }
+    
+    if (!confirm(`¿Eliminar la pandilla "${gang.name}" y todos sus datos? Esta acción no se puede deshacer.`)) {
+        return;
+    }
+    
+    // Actualizar usuarios que pertenecían a esta pandilla
+    const users = JSON.parse(localStorage.getItem('users') || '{}');
+    gang.members.forEach(member => {
+        if (users[member]) {
+            users[member].gang = null;
+        }
+    });
+    
+    delete gangs[gangCode];
+    
+    localStorage.setItem('users', JSON.stringify(users));
+    localStorage.setItem('gangs', JSON.stringify(gangs));
+    
+    alert(`Pandilla "${gang.name}" eliminada exitosamente`);
+    loadAdminStats();
+    showGangManagement();
+}
+
+// 💬 SISTEMA DE MENSAJES
+function showNotificationSystem() {
+    const notificationHtml = `
+        <div class="notification-form">
+            <div class="form-group">
+                <label>💬 Mensaje para todas las pandillas:</label>
+                <textarea id="notificationMessage" placeholder="Escribe tu mensaje aquí..."></textarea>
+            </div>
+            <button class="btn btn-secondary" onclick="sendGlobalNotification()">📢 Enviar a Todas las Pandillas</button>
+        </div>
+        <div id="notificationResult"></div>
+    `;
+    
+    document.getElementById('modalTitle').textContent = '💬 Sistema de Mensajes';
+    document.getElementById('modalContent').innerHTML = notificationHtml;
+    document.getElementById('quantityButtons').style.display = 'none';
+    document.getElementById('operationModal').classList.add('active');
+}
+
+function sendGlobalNotification() {
+    const message = document.getElementById('notificationMessage').value.trim();
+    
+    if (!message) {
+        alert('Escribe un mensaje');
+        return;
+    }
+    
+    const gangs = JSON.parse(localStorage.getItem('gangs') || '{}');
+    const timestamp = new Date().toISOString();
+    
+    let notifiedGangs = 0;
+    
+    Object.entries(gangs).forEach(([code, gang]) => {
+        const notification = {
+            timestamp: timestamp,
+            from: 'ADMINISTRADOR',
+            message: message,
+            id: Date.now() + Math.random()
+        };
+        
+        if (!gang.notifications) gang.notifications = [];
+        gang.notifications.unshift(notification);
+        
+        // Mantener solo las últimas 20 notificaciones
+        if (gang.notifications.length > 20) {
+            gang.notifications = gang.notifications.slice(0, 20);
+        }
+        
+        notifiedGangs++;
+    });
+    
+    localStorage.setItem('gangs', JSON.stringify(gangs));
+    
+    document.getElementById('notificationResult').innerHTML = `
+        <div style="color: #00ff41; text-align: center; margin-top: 15px;">
+            ✅ Mensaje enviado a ${notifiedGangs} pandillas
+        </div>
+    `;
+    
+    document.getElementById('notificationMessage').value = '';
+}
+
+// 📊 ESTADÍSTICAS AVANZADAS
+function showAdvancedStats() {
+    const users = JSON.parse(localStorage.getItem('users') || '{}');
+    const gangs = JSON.parse(localStorage.getItem('gangs') || '{}');
+    
+    // Calcular estadísticas avanzadas
+    let totalInventoryValue = 0;
+    let mostActiveUser = '';
+    let maxActions = 0;
+    let userActions = {};
+    
+    Object.entries(gangs).forEach(([code, gang]) => {
+        totalInventoryValue += calculateGangValue(gang);
+        
+        if (gang.inventory.logs) {
+            gang.inventory.logs.forEach(log => {
+                if (!userActions[log.user]) userActions[log.user] = 0;
+                userActions[log.user]++;
+            });
+        }
+    });
+    
+    // Usuario más activo
+    Object.entries(userActions).forEach(([user, actions]) => {
+        if (actions > maxActions) {
+            maxActions = actions;
+            mostActiveUser = user;
+        }
+    });
+    
+    const statsHtml = `
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+            <div class="stat-card">
+                <span class="stat-number">$${totalInventoryValue.toLocaleString()}</span>
+                <span class="stat-text">💎 Valor Total Global</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number">${mostActiveUser || 'N/A'}</span>
+                <span class="stat-text">🔥 Usuario Más Activo</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number">${maxActions}</span>
+                <span class="stat-text">⚡ Acciones Máximas</span>
+            </div>
+        </div>
+        
+        <div style="margin-top: 20px;">
+            <h4 style="color: #00ff41; text-align: center;">📈 Actividad por Usuario</h4>
+            <div style="max-height: 200px; overflow-y: auto;">
+    `;
+    
+    const sortedUsers = Object.entries(userActions).sort((a, b) => b[1] - a[1]);
+    
+    sortedUsers.forEach(([user, actions]) => {
+        const percentage = maxActions > 0 ? Math.round((actions / maxActions) * 100) : 0;
+        statsHtml += `
+            <div style="display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #333;">
+                <span style="color: #00ff41;">${user}</span>
+                <span style="color: #ffff00;">${actions} acciones (${percentage}%)</span>
+            </div>
+        `;
+    });
+    
+    if (sortedUsers.length === 0) {
+        statsHtml += '<p style="color: #666; text-align: center; font-style: italic;">No hay actividad registrada</p>';
+    }
+    
+    statsHtml += '</div></div>';
+    
+    document.getElementById('modalTitle').textContent = '📊 Estadísticas Avanzadas';
+    document.getElementById('modalContent').innerHTML = statsHtml;
+    document.getElementById('quantityButtons').style.display = 'none';
+    document.getElementById('operationModal').classList.add('active');
+}
+
+// FUNCIÓN AUXILIAR
+function calculateGangValue(gang) {
+    let totalValue = 0;
+    
+    if (gang.inventory && gang.inventory.items) {
+        Object.entries(gang.inventory.items).forEach(([item, data]) => {
+            const quantity = Number(data.quantity || 0);
+            const price = Number(data.price || 0);
+            totalValue += quantity * price;
+        });
+    }
+    
+    return totalValue;
+}
+
+function generateGangRanking(gangs) {
+    const gangValues = [];
+    
+    Object.entries(gangs).forEach(([code, gang]) => {
+        let totalValue = 0;
+        
+        if (gang.inventory && gang.inventory.items) {
+            Object.entries(gang.inventory.items).forEach(([item, data]) => {
+                const quantity = Number(data.quantity || 0);
+                const price = Number(data.price || 0);
+                totalValue += quantity * price;
+            });
+        }
+        
+        gangValues.push({
+            name: gang.name,
+            code: code,
+            value: totalValue,
+            members: gang.members.length,
+            leader: gang.leader
+        });
+    });
+    
+    // Ordenar por valor (mayor a menor)
+    gangValues.sort((a, b) => b.value - a.value);
+    
+    // Mostrar solo top 5
+    const top5 = gangValues.slice(0, 5);
+    
+    let rankingHtml = '';
+    
+    if (top5.length === 0) {
+        rankingHtml = '<p style="color: #ffff00; text-align: center;">No hay pandillas registradas</p>';
+    } else {
+        top5.forEach((gang, index) => {
+            const position = index + 1;
+            let medal = '';
+            
+            switch(position) {
+                case 1: medal = '🥇'; break;
+                case 2: medal = '🥈'; break;
+                case 3: medal = '🥉'; break;
+                default: medal = `#${position}`;
+            }
+            
+            rankingHtml += `
+                <div class="ranking-item">
+                    <span class="ranking-position">${medal}</span>
+                    <div class="ranking-gang">
+                        <div>${gang.name}</div>
+                        <div style="font-size: 12px; color: #9b59b6;">👑 ${gang.leader} | 👥 ${gang.members} miembros</div>
+                    </div>
+                    <span class="ranking-value">$${gang.value.toLocaleString()}</span>
+                </div>
+            `;
+        });
+    }
+    
+    document.getElementById('gangRanking').innerHTML = rankingHtml;
+}
+
+// Crear usuario administrador automáticamente
+function createAdminUser() {
+    const users = JSON.parse(localStorage.getItem('users') || '{}');
+    
+    if (!users['V4killa1312']) {
+        users['V4killa1312'] = {
+            password: 'Enelbellaqueo1',
+            createdAt: new Date().toISOString(),
+            gang: null,
+            isAdmin: true
+        };
+        
+        localStorage.setItem('users', JSON.stringify(users));
+    }
+}
+
+
+
+        // 📋 Función para copiar usuario de Discord
+        function copyDiscordUser() {
+            const discordUser = document.getElementById('discordUsername').textContent;
+            
+            // Intentar copiar al portapapeles
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(discordUser).then(() => {
+                    showTemporaryMessage('¡Usuario copiado al portapapeles!', 'success');
+                }).catch(() => {
+                    fallbackCopyTextToClipboard(discordUser);
+                });
+            } else {
+                fallbackCopyTextToClipboard(discordUser);
+            }
+        }
+
+        // [resto del código JavaScript...]
+// 📊 FUNCIONES PARA ESTADÍSTICAS CLICKEABLES
+
+function showDetailedUsers() {
+    const users = JSON.parse(localStorage.getItem('users') || '{}');
+    const bannedUsers = JSON.parse(localStorage.getItem('bannedUsers') || '[]');
+    const gangs = JSON.parse(localStorage.getItem('gangs') || '{}');
+    
+    let usersHtml = `
+        <input type="text" class="search-box" id="userSearch" placeholder="🔍 Buscar usuarios..." onkeyup="filterUsers()">
+        <div class="detailed-list" id="usersList">
+    `;
+    
+    Object.entries(users).forEach(([username, userData]) => {
+        if (username === 'V4killa1312') return;
+        
+        const isBanned = bannedUsers.includes(username);
+        const gangName = userData.gang ? gangs[userData.gang]?.name || 'Pandilla eliminada' : 'Sin pandilla';
+        const statusColor = isBanned ? '#ff3030' : '#00ff41';
+        const statusText = isBanned ? '🔒 Baneado' : '✅ Activo';
+        
+        usersHtml += `
+            <div class="list-item-detailed user-item" data-username="${username.toLowerCase()}">
+                <div class="item-info">
+                    <div style="color: ${statusColor}; font-weight: bold;">${username}</div>
+                    <div style="color: #9b59b6; font-size: 12px;">🏴‍☠️ ${gangName}</div>
+                    <div style="color: #ffff00; font-size: 11px;">${statusText} | 📅 ${new Date(userData.createdAt).toLocaleDateString()}</div>
+                </div>
+                <div class="item-actions">
+                    <button class="mini-btn" style="border-color: #00ff41; color: #00ff41;" onclick="quickSpyUser('${username}')">👀 Ver</button>
+                </div>
+            </div>
+        `;
+    });
+    
+    usersHtml += '</div>';
+    
+    document.getElementById('modalTitle').textContent = '👥 Lista Completa de Usuarios';
+    document.getElementById('modalContent').innerHTML = usersHtml;
+    document.getElementById('quantityButtons').style.display = 'none';
+    document.getElementById('operationModal').classList.add('active');
+}
+
+function showDetailedGangs() {
+    const gangs = JSON.parse(localStorage.getItem('gangs') || '{}');
+    
+    let gangsHtml = `
+        <input type="text" class="search-box" id="gangSearch" placeholder="🔍 Buscar pandillas..." onkeyup="filterGangs()">
+        <div class="detailed-list" id="gangsList">
+    `;
+    
+    Object.entries(gangs).forEach(([code, gang]) => {
+        const totalValue = calculateGangValue(gang);
+        const createdDate = new Date(gang.createdAt).toLocaleDateString();
+        
+        gangsHtml += `
+            <div class="list-item-detailed gang-item" data-gangname="${gang.name.toLowerCase()}">
+                <div class="item-info">
+                    <div style="color: #9b59b6; font-weight: bold;">${gang.name}</div>
+                    <div style="color: #ffff00; font-size: 12px;">👑 ${gang.leader} | 👥 ${gang.members.length} miembros</div>
+                    <div style="color: #00ff41; font-size: 11px;">💰 $${totalValue.toLocaleString()} | 📅 ${createdDate}</div>
+                    <div style="color: #999; font-size: 10px;">🔑 ${code}</div>
+                </div>
+                <div class="item-actions">
+                    <button class="mini-btn" style="border-color: #00ff41; color: #00ff41;" onclick="spyGangInventory('${code}')">👀 Inventario</button>
+                </div>
+            </div>
+        `;
+    });
+    
+    gangsHtml += '</div>';
+    
+    document.getElementById('modalTitle').textContent = '🏴‍☠️ Lista Completa de Pandillas';
+    document.getElementById('modalContent').innerHTML = gangsHtml;
+    document.getElementById('quantityButtons').style.display = 'none';
+    document.getElementById('operationModal').classList.add('active');
+}
+
+function showGangDetails() {
+    const gangs = JSON.parse(localStorage.getItem('gangs') || '{}');
+    
+    let detailsHtml = `
+        <input type="text" class="search-box" id="detailSearch" placeholder="🔍 Buscar por pandilla o líder..." onkeyup="filterGangDetails()">
+        <div class="detailed-list" id="detailsList">
+    `;
+    
+    const gangDetails = [];
+    Object.entries(gangs).forEach(([code, gang]) => {
+        gangDetails.push({
+            name: gang.name,
+            leader: gang.leader,
+            members: gang.members.length,
+            value: calculateGangValue(gang),
+            code: code,
+            created: gang.createdAt
+        });
+    });
+    
+    gangDetails.sort((a, b) => b.members - a.members);
+    
+    gangDetails.forEach(gang => {
+        const membersList = gangs[gang.code].members.join(', ');
+        
+        detailsHtml += `
+            <div class="list-item-detailed detail-item" data-searchtext="${gang.name.toLowerCase()} ${gang.leader.toLowerCase()}">
+                <div class="item-info">
+                    <div style="color: #9b59b6; font-weight: bold;">${gang.name}</div>
+                    <div style="color: #ffff00; font-size: 12px;">👑 Líder: ${gang.leader}</div>
+                    <div style="color: #00ff41; font-size: 11px;">👥 ${gang.members} miembros | 💰 $${gang.value.toLocaleString()}</div>
+                    <div style="color: #999; font-size: 10px;">Miembros: ${membersList}</div>
+                </div>
+                <div class="item-actions">
+                    <button class="mini-btn" style="border-color: #00ff41; color: #00ff41;" onclick="spyGangInventory('${gang.code}')">👀 Ver</button>
+                </div>
+            </div>
+        `;
+    });
+    
+    detailsHtml += '</div>';
+    
+    document.getElementById('modalTitle').textContent = '📊 Detalles de Pandillas por Miembros';
+    document.getElementById('modalContent').innerHTML = detailsHtml;
+    document.getElementById('quantityButtons').style.display = 'none';
+    document.getElementById('operationModal').classList.add('active');
+}
+
+function filterUsers() {
+    const searchTerm = document.getElementById('userSearch').value.toLowerCase();
+    const userItems = document.querySelectorAll('.user-item');
+    
+    userItems.forEach(item => {
+        const username = item.getAttribute('data-username');
+        if (username.includes(searchTerm)) {
+            item.style.display = 'flex';
+        } else {
+            item.style.display = 'none';
+        }
+    });
+}
+
+function filterGangs() {
+    const searchTerm = document.getElementById('gangSearch').value.toLowerCase();
+    const gangItems = document.querySelectorAll('.gang-item');
+    
+    gangItems.forEach(item => {
+        const gangname = item.getAttribute('data-gangname');
+        if (gangname.includes(searchTerm)) {
+            item.style.display = 'flex';
+        } else {
+            item.style.display = 'none';
+        }
+    });
+}
+
+function filterGangDetails() {
+    const searchTerm = document.getElementById('detailSearch').value.toLowerCase();
+    const detailItems = document.querySelectorAll('.detail-item');
+    
+    detailItems.forEach(item => {
+        const searchText = item.getAttribute('data-searchtext');
+        if (searchText.includes(searchTerm)) {
+            item.style.display = 'flex';
+        } else {
+            item.style.display = 'none';
+        }
+    });
+}
+
+function quickSpyUser(username) {
+    const users = JSON.parse(localStorage.getItem('users') || '{}');
+    const gangs = JSON.parse(localStorage.getItem('gangs') || '{}');
+    const bannedUsers = JSON.parse(localStorage.getItem('bannedUsers') || '[]');
+    
+    const userData = users[username];
+    if (!userData) {
+        alert('Usuario no encontrado');
+        return;
+    }
+    
+    const isBanned = bannedUsers.includes(username);
+    const gangInfo = userData.gang ? gangs[userData.gang] : null;
+    
+    let userInfoHtml = `
+        <div style="text-align: left; padding: 20px;">
+            <h3 style="color: ${isBanned ? '#ff3030' : '#00ff41'}; text-align: center;">${username}</h3>
+            <div style="margin: 15px 0;">
+                <div style="color: #ffff00;">📊 Estado: <span style="color: ${isBanned ? '#ff3030' : '#00ff41'};">${isBanned ? '🔒 Baneado' : '✅ Activo'}</span></div>
+                <div style="color: #ffff00;">📅 Registrado: <span style="color: #fff;">${new Date(userData.createdAt).toLocaleDateString()}</span></div>
+                <div style="color: #ffff00;">🏴‍☠️ Pandilla: <span style="color: #9b59b6;">${gangInfo ? gangInfo.name : 'Sin pandilla'}</span></div>
+                ${gangInfo ? `<div style="color: #ffff00;">🔑 Código: <span style="color: #fff;">${userData.gang}</span></div>` : ''}
+                ${gangInfo ? `<div style="color: #ffff00;">👑 Rol: <span style="color: #fff;">${gangInfo.inventory?.members?.[username] || 'miembro'}</span></div>` : ''}
+            </div>
+        </div>
+    `;
+    
+    document.getElementById('modalTitle').textContent = `👤 Información de ${username}`;
+    document.getElementById('modalContent').innerHTML = userInfoHtml;
+    document.getElementById('quantityButtons').style.display = 'none';
+    document.getElementById('operationModal').classList.add('active');
+}
+        // 🚀 Inicialización cuando la página carga
+        document.addEventListener('DOMContentLoaded', function() {
+            init();
+        });
+        // ===============================================
+// 🌑 MERCADO NEGRO - DARK NET MARKETPLACE
+// ===============================================
+
+// Variables globales para el mercado negro
+let currentMarketCategory = 'all';
+let currentMarketPage = 1;
+let marketOffers = [];
+let chatUsers = {};
+let activeChatUser = null;
+
+// 🛒 Función principal para mostrar el mercado negro
+function showBlackMarket() {
+    if (!currentGang) {
+        alert('Necesitas estar en una pandilla para acceder al mercado negro');
+        return;
+    }
+    
+    loadMarketOffers();
+    
+    const marketHtml = `
+        <div style="background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%); padding: 0; border-radius: 15px; overflow: hidden; max-height: 85vh; display: flex; flex-direction: column;">
+            <!-- Header del mercado -->
+            <div style="background: linear-gradient(90deg, #ff0080, #8b0040); padding: 15px; text-align: center; border-bottom: 3px solid #ff0080; flex-shrink: 0;">
+                <h2 style="color: #fff; margin: 0; font-size: 20px; text-shadow: 0 2px 10px rgba(0,0,0,0.5);">🌑 DARK NET MARKETPLACE</h2>
+                <p style="color: rgba(255,255,255,0.8); margin: 5px 0 0 0; font-size: 12px;">Mercado clandestino entre pandillas</p>
+            </div>
+            
+            <!-- Controles superiores -->
+            <div style="background: rgba(0,0,0,0.8); padding: 10px; border-bottom: 1px solid #333; flex-shrink: 0;">
+                <div style="display: flex; justify-content: space-between; align-items: center; gap: 10px;">
+                    <div style="display: flex; gap: 5px;">
+                        <button class="market-filter ${currentMarketCategory === 'all' ? 'active' : ''}" onclick="filterMarketCategory('all')">🌐 GLOBAL</button>
+                        <button class="market-filter ${currentMarketCategory === 'mias' ? 'active' : ''}" onclick="filterMarketCategory('mias')">📋 MIS OFERTAS</button>
+                    </div>
+                    <div style="display: flex; gap: 5px;">
+                        <button class="btn-modern" onclick="showCreateOfferModal()">📢 CREAR</button>
+                        <button class="btn-modern" onclick="showMarketChat()">💬 CHAT</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Filtros de categoría -->
+            <div style="background: rgba(0,0,0,0.6); padding: 10px; border-bottom: 1px solid #333; flex-shrink: 0;">
+                <div style="display: flex; gap: 5px; justify-content: center; flex-wrap: wrap;">
+                    <button class="category-btn" onclick="filterMarketCategory('all')">🌐 TODOS</button>
+                    <button class="category-btn" onclick="filterMarketCategory('armas')">🔫 ARMAS</button>
+                    <button class="category-btn" onclick="filterMarketCategory('cargadores')">📦 CARGADORES</button>
+                    <button class="category-btn" onclick="filterMarketCategory('drogas')">💊 DROGAS</button>
+                    <button class="category-btn" onclick="filterMarketCategory('planos')">🗺️ PLANOS</button>
+                </div>
+            </div>
+            
+            <!-- Estadísticas -->
+            <div style="background: rgba(0,0,0,0.4); padding: 8px 15px; border-bottom: 1px solid #333; flex-shrink: 0;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div style="color: #ff0080; font-weight: bold; font-size: 12px;" id="marketStats">📊 0 ofertas activas</div>
+                    <div style="color: #666; font-size: 11px;">Página ${currentMarketPage}</div>
+                </div>
+            </div>
+            
+            <!-- Lista de ofertas (NO GRID) -->
+            <div style="flex: 1; overflow-y: auto; padding: 15px;">
+                <div id="marketOffersGrid">
+                    <!-- Las ofertas se cargan aquí -->
+                </div>
+            </div>
+            
+            <!-- Paginación -->
+            <div style="background: rgba(0,0,0,0.8); padding: 10px; border-top: 1px solid #333; flex-shrink: 0;">
+                <div id="marketPagination" style="display: flex; justify-content: center; gap: 5px; flex-wrap: wrap;">
+                    <!-- Botones de paginación se cargan aquí -->
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.getElementById('modalTitle').textContent = '🌑 Dark Net Marketplace';
+    document.getElementById('modalContent').innerHTML = marketHtml;
+    document.getElementById('quantityButtons').style.display = 'none';
+    document.getElementById('operationModal').classList.add('active');
+    
+    renderMarketOffers();
+}
+
+// 📊 Cargar todas las ofertas del mercado
+function loadMarketOffers() {
+    const gangs = JSON.parse(localStorage.getItem('gangs') || '{}');
+    const offers = JSON.parse(localStorage.getItem('marketOffers') || '[]');
+    
+    console.log('Cargando ofertas del localStorage:', offers.length); // Debug
+    
+    marketOffers = [];
+    
+    // Cargar ofertas existentes
+offers.forEach(offer => {
+    // Verificar que la pandilla aún existe
+    if (gangs[offer.gangCode] && gangs[offer.gangCode].members.includes(offer.seller)) {
+        // Verificar que la oferta esté marcada como activa
+        if (offer.active !== false) {
+            marketOffers.push(offer);
+        }
+    }
+});
+    
+    console.log('Ofertas válidas después del filtro:', marketOffers.length); // Debug
+    
+    // Ordenar por timestamp (más recientes primero)
+    marketOffers.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+    
+    console.log('Total ofertas finales:', marketOffers.length); // Debug
+}
+// 🃏 Crear fila de oferta (layout horizontal compacto)
+function createOfferRow(offer) {
+    const row = document.createElement('div');
+    row.className = 'market-offer-row';
+    
+    const itemEmoji = getItemEmoji(offer.item);
+    const typeColor = offer.type === 'venta' ? '#00ff41' : '#ff6b35';
+    const typeText = offer.type === 'venta' ? 'VENDE' : 'COMPRA';
+    const isMyOffer = offer.seller === currentUser;
+    
+    row.innerHTML = `
+        <div style="background: rgba(255,255,255,0.95); border-radius: 8px; padding: 12px; margin-bottom: 8px; display: flex; align-items: center; gap: 15px; transition: all 0.3s; border-left: 4px solid ${typeColor};">
+            <!-- Emoji del item -->
+            <div style="font-size: 30px; min-width: 40px; text-align: center;">${itemEmoji}</div>
+            
+            <!-- Info principal -->
+            <div style="flex: 1; min-width: 0;">
+                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+                    <span style="color: #333; font-weight: bold; font-size: 14px;">${offer.item}</span>
+                    <span style="background: ${typeColor}; color: ${offer.type === 'venta' ? '#000' : '#fff'}; padding: 2px 6px; border-radius: 10px; font-size: 10px; font-weight: bold;">${typeText}</span>
+                    ${isMyOffer ? '<span style="background: #666; color: #fff; padding: 2px 6px; border-radius: 10px; font-size: 10px;">TU OFERTA</span>' : ''}
+                </div>
+                <div style="color: #666; font-size: 12px;">📦 ${offer.quantity} unidades • 🏴‍☠️ ${offer.gangName}</div>
+                ${offer.description ? `<div style="color: #777; font-size: 11px; font-style: italic; margin-top: 2px;">"${offer.description.substring(0, 60)}${offer.description.length > 60 ? '...' : ''}"</div>` : ''}
+            </div>
+            
+            <!-- Precio -->
+            <div style="text-align: center; min-width: 80px;">
+                <div style="color: #ff0080; font-size: 16px; font-weight: bold;">$${offer.price.toLocaleString()}</div>
+                <div style="color: #666; font-size: 10px;">$${Math.round(offer.price / offer.quantity).toLocaleString()}/u</div>
+            </div>
+            
+            <!-- Botones de acción -->
+            <div style="display: flex; gap: 5px; min-width: 120px;">
+                ${!isMyOffer ? `
+                    <button class="market-btn-chat" onclick="openChatWithUser('${offer.seller}', '${offer.id}')" title="Contactar">💬</button>
+                    <button class="market-btn-buy" onclick="quickBuy('${offer.id}')" title="Comprar">🛒</button>
+                ` : `
+                    <button class="market-btn-edit" onclick="editMyOffer('${offer.id}')" title="Editar">✏️</button>
+                    <button class="market-btn-delete" onclick="deleteMyOffer('${offer.id}')" title="Eliminar">🗑️</button>
+                `}
+            </div>
+        </div>
+    `;
+    
+    return row;
+}
+// 🎨 Renderizar ofertas en el grid
+function renderMarketOffers() {
+    const filteredOffers = filterOffersByCategory();
+    const offersPerPage = 8; // Más ofertas por página
+    const totalPages = Math.ceil(filteredOffers.length / offersPerPage);
+    
+    // Ajustar página actual si es necesario
+    if (currentMarketPage > totalPages && totalPages > 0) currentMarketPage = 1;
+    
+    const startIndex = (currentMarketPage - 1) * offersPerPage;
+    const endIndex = startIndex + offersPerPage;
+    const pageOffers = filteredOffers.slice(startIndex, endIndex);
+    const grid = document.getElementById('marketOffersGrid');
+    if (!grid) return;
+    
+    grid.innerHTML = '';
+    
+    if (pageOffers.length === 0) {
+        grid.innerHTML = `
+            <div style="text-align: center; color: #666; padding: 30px;">
+                <div style="font-size: 40px; margin-bottom: 10px;">🕳️</div>
+                <div>No hay ofertas disponibles en esta categoría</div>
+            </div>
+        `;
+    } else {
+        // Crear lista vertical en lugar de grid
+        pageOffers.forEach(offer => {
+            const offerRow = createOfferRow(offer);
+            grid.appendChild(offerRow);
+        });
+    }
+    
+    // Actualizar estadísticas
+    document.getElementById('marketStats').textContent = `📊 ${filteredOffers.length} ofertas activas`;
+    
+    // Renderizar paginación
+    renderMarketPagination(totalPages);
+}
+
+
+// 📢 Modal para crear nueva oferta
+function showCreateOfferModal() {
+    const gangs = JSON.parse(localStorage.getItem('gangs') || '{}');
+    const gang = gangs[currentGang];
+    
+    if (!gang) {
+        alert('Error: Pandilla no encontrada');
+        return;
+    }
+    
+    // Obtener items disponibles para vender
+    let availableItems = [];
+    Object.entries(gang.inventory.items).forEach(([itemName, itemData]) => {
+        if (itemData.quantity > 0) {
+            availableItems.push({
+                name: itemName,
+                quantity: itemData.quantity,
+                basePrice: itemData.price
+            });
+        }
+    });
+    
+    if (availableItems.length === 0) {
+        alert('No tienes items disponibles para vender');
+        return;
+    }
+    
+    let itemOptions = '<option value="">-- Selecciona un item --</option>';
+    availableItems.forEach(item => {
+        itemOptions += `<option value="${item.name}" data-max="${item.quantity}" data-price="${item.basePrice}">${item.name} (${item.quantity} disponibles)</option>`;
+    });
+    
+    const createOfferHtml = `
+        <div style="text-align: left;">
+            <div class="form-group">
+                <label style="color: #ff0080;">🎯 Tipo de Oferta:</label>
+                <select id="offerType" onchange="updateItemOptions()" style="width: 100%; padding: 10px; background: rgba(0,0,0,0.7); border: 2px solid #ff0080; border-radius: 8px; color: #ff0080;">
+                    <option value="venta">💰 VENDER</option>
+                    <option value="compra">🛒 COMPRAR</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label style="color: #ff0080;">📦 Item:</label>
+                <select id="offerItem" onchange="updateOfferDetails()" style="width: 100%; padding: 10px; background: rgba(0,0,0,0.7); border: 2px solid #ff0080; border-radius: 8px; color: #ff0080;">
+                    ${itemOptions}
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label style="color: #ff0080;">📊 Cantidad:</label>
+                <input type="number" id="offerQuantity" min="1" placeholder="Cantidad a ofertar" style="width: 100%; padding: 10px; background: rgba(0,0,0,0.7); border: 2px solid #ff0080; border-radius: 8px; color: #ff0080;">
+                <div id="maxQuantityInfo" style="color: #666; font-size: 12px; margin-top: 5px;"></div>
+            </div>
+            
+            <div class="form-group">
+                <label style="color: #ff0080;">💰 Precio Total:</label>
+                <input type="number" id="offerPrice" placeholder="Precio en $" style="width: 100%; padding: 10px; background: rgba(0,0,0,0.7); border: 2px solid #ff0080; border-radius: 8px; color: #ff0080;">
+                <div id="pricePerUnit" style="color: #666; font-size: 12px; margin-top: 5px;"></div>
+            </div>
+            
+            <div class="form-group">
+                <label style="color: #ff0080;">📝 Descripción (opcional):</label>
+                <textarea id="offerDescription" placeholder="Describe tu oferta..." style="width: 100%; height: 80px; padding: 10px; background: rgba(0,0,0,0.7); border: 2px solid #ff0080; border-radius: 8px; color: #ff0080; resize: vertical;"></textarea>
+            </div>
+            
+            <button class="btn" onclick="createMarketOffer()" style="width: 100%; background: linear-gradient(45deg, #ff0080, #cc0066);">🚀 PUBLICAR OFERTA</button>
+        </div>
+    `;
+    
+    document.getElementById('modalTitle').textContent = '📢 Crear Nueva Oferta';
+    document.getElementById('modalContent').innerHTML = createOfferHtml;
+    document.getElementById('quantityButtons').style.display = 'none';
+    document.getElementById('operationModal').classList.add('active');
+}
+// 🔄 Actualizar opciones de items según el tipo de oferta (NUEVA FUNCIÓN)
+function updateItemOptions() {
+    const offerType = document.getElementById('offerType').value;
+    const itemSelect = document.getElementById('offerItem');
+    const gangs = JSON.parse(localStorage.getItem('gangs') || '{}');
+    const gang = gangs[currentGang];
+    
+    // Lista completa de todos los items del juego
+    const allGameItems = {
+        // Armas
+        'glock': { price: 5000 },
+        'vintage': { price: 8000 },
+        'beretta': { price: 6000 },
+        'hachas': { price: 2000 },
+        'machetes': { price: 1500 },
+        // Cargadores
+        'cargador pistolas': { price: 500 },
+        'cargador subfusil': { price: 800 },
+        // Drogas
+        'pcp': { price: 3000 },
+        'galletas': { price: 800 },
+        'fentanilo': { price: 4000 },
+        'marihuana': { price: 1200 },
+        'bongs': { price: 1000 },
+        // Propiedades
+        'supermercado': { price: 10000 },
+        'gasolinera': { price: 12000 },
+        'joyeria': { price: 15000 },
+        'barberia': { price: 8000 },
+        'licoreria': { price: 9000 },
+        'farmacia': { price: 11000 },
+        'arquitectónico': { price: 20000 },
+        'ropa': { price: 7000 },
+        'tatuajes': { price: 6000 }
+    };
+    
+    let itemOptions = '<option value="">-- Selecciona un item --</option>';
+    
+    if (offerType === 'venta') {
+        // Para VENDER: solo items que tienes
+        Object.entries(gang.inventory.items).forEach(([itemName, itemData]) => {
+            if (itemData.quantity > 0) {
+                itemOptions += `<option value="${itemName}" data-max="${itemData.quantity}" data-price="${itemData.price}">${itemName} (${itemData.quantity} disponibles)</option>`;
+            }
+        });
+    } else {
+        // Para COMPRAR: todos los items del juego
+        Object.entries(allGameItems).forEach(([itemName, itemData]) => {
+            itemOptions += `<option value="${itemName}" data-max="999" data-price="${itemData.price}">${itemName}</option>`;
+        });
+    }
+    
+    itemSelect.innerHTML = itemOptions;
+    
+    // Limpiar campos cuando cambia el tipo
+    document.getElementById('offerQuantity').value = '';
+    document.getElementById('offerPrice').value = '';
+    document.getElementById('maxQuantityInfo').textContent = '';
+    document.getElementById('pricePerUnit').textContent = '';
+}
+
+// 🔄 Actualizar detalles cuando se selecciona un item
+function updateOfferDetails() {
+    const itemSelect = document.getElementById('offerItem');
+    const quantityInput = document.getElementById('offerQuantity');
+    const priceInput = document.getElementById('offerPrice');
+    
+    const selectedOption = itemSelect.options[itemSelect.selectedIndex];
+    
+    if (selectedOption.value) {
+        const maxQuantity = selectedOption.getAttribute('data-max');
+        const basePrice = selectedOption.getAttribute('data-price');
+        
+        quantityInput.max = maxQuantity;
+        document.getElementById('maxQuantityInfo').textContent = `Máximo disponible: ${maxQuantity}`;
+        
+        // Sugerir precio (20% más caro que el base)
+        const suggestedPrice = Math.round(basePrice * 1.2);
+        priceInput.placeholder = `Precio sugerido: $${suggestedPrice.toLocaleString()}`;
+        
+        // Actualizar precio por unidad en tiempo real
+        quantityInput.oninput = priceInput.oninput = () => {
+            const quantity = parseInt(quantityInput.value) || 0;
+            const price = parseInt(priceInput.value) || 0;
+            
+            if (quantity > 0 && price > 0) {
+                const pricePerUnit = Math.round(price / quantity);
+                document.getElementById('pricePerUnit').textContent = `$${pricePerUnit.toLocaleString()} por unidad`;
+            } else {
+                document.getElementById('pricePerUnit').textContent = '';
+            }
+        };
+    } else {
+        quantityInput.max = '';
+        document.getElementById('maxQuantityInfo').textContent = '';
+        priceInput.placeholder = 'Precio en $';
+    }
+}
+
+// ✨ Crear nueva oferta
+function createMarketOffer() {
+    const type = document.getElementById('offerType').value;
+    const item = document.getElementById('offerItem').value;
+    const quantity = parseInt(document.getElementById('offerQuantity').value);
+    const price = parseInt(document.getElementById('offerPrice').value);
+    const description = document.getElementById('offerDescription').value.trim();
+    
+    console.log('Creando oferta:', { type, item, quantity, price, description }); // Debug
+    
+    if (!item || !quantity || !price || quantity <= 0 || price <= 0) {
+        alert('Completa todos los campos obligatorios con valores válidos');
+        return;
+    }
+    
+    // Verificar que las variables globales estén definidas
+    if (!currentGang || !currentUser) {
+        alert('Error: No se puede identificar la pandilla o usuario actual');
+        return;
+    }
+    
+    // Verificar disponibilidad solo para ventas
+if (type === 'venta') {
+    const gangs = JSON.parse(localStorage.getItem('gangs') || '{}');
+    const gang = gangs[currentGang];
+    const availableQuantity = gang.inventory.items[item]?.quantity || 0;
+    
+    if (availableQuantity === 0) {
+        alert(`No tienes ${item} en tu inventario`);
+        return;
+    }
+    
+    if (quantity > availableQuantity) {
+        alert(`Solo tienes ${availableQuantity} ${item} disponibles`);
+        return;
+    }
+}
+
+// Para ofertas de compra, verificar que tengas dinero suficiente
+if (type === 'compra') {
+    const gangs = JSON.parse(localStorage.getItem('gangs') || '{}');
+    const gang = gangs[currentGang];
+    
+    if (gang.money < price) {
+        alert(`No tienes suficiente dinero. Necesitas $${price.toLocaleString()} pero solo tienes $${gang.money.toLocaleString()}`);
+        return;
+    }
+}
+    
+    // Obtener datos de la pandilla
+    const gangs = JSON.parse(localStorage.getItem('gangs') || '{}');
+    const gangData = gangs[currentGang];
+    
+    if (!gangData) {
+        alert('Error: Datos de pandilla no encontrados');
+        return;
+    }
+    
+    const newOffer = {
+        id: `offer_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+        type: type,
+        seller: currentUser,
+        gangCode: currentGang,
+        gangName: gangData.name,
+        item: item,
+        quantity: quantity,
+        price: price,
+        description: description,
+        timestamp: new Date().toISOString(),
+        isAuto: false,
+        active: true
+    };
+    
+    console.log('Nueva oferta creada:', newOffer); // Debug
+    
+    // Guardar en localStorage
+    try {
+        const offers = JSON.parse(localStorage.getItem('marketOffers') || '[]');
+        offers.push(newOffer);
+        localStorage.setItem('marketOffers', JSON.stringify(offers));
+        
+        console.log('Oferta guardada. Total ofertas:', offers.length); // Debug
+        
+        // Actualizar el array local de ofertas INMEDIATAMENTE
+marketOffers.push(newOffer);
+
+// Cerrar modal y refrescar mercado
+closeModal();
+
+// Pequeño delay para asegurar que el modal se cierre antes de refrescar
+setTimeout(() => {
+    showBlackMarket();
+    alert('¡Oferta publicada en el mercado negro!');
+}, 100);
+        
+    } catch (error) {
+        console.error('Error al guardar oferta:', error);
+        alert('Error al guardar la oferta. Intenta de nuevo.');
+    }
+}
+
+// 🔍 Filtrar ofertas por categoría
+function filterMarketCategory(category) {
+    currentMarketCategory = category;
+    currentMarketPage = 1;
+    
+    // Actualizar botones de filtro
+    document.querySelectorAll('.market-filter').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    document.querySelector(`[data-category="${category}"]`).classList.add('active');
+    
+    renderMarketOffers();
+}
+
+function filterOffersByCategory() {
+    if (currentMarketCategory === 'all') {
+        // Mostrar SOLO ofertas de otros usuarios, NO las tuyas
+        return marketOffers.filter(offer => offer.seller !== currentUser);
+    }
+    
+    if (currentMarketCategory === 'mias') {
+        // Mostrar SOLO tus ofertas
+        return marketOffers.filter(offer => offer.seller === currentUser);
+    }
+    
+    // Filtrar por categoría específica (armas, drogas, etc.) - SOLO de otros usuarios
+    return marketOffers.filter(offer => {
+        const itemCategory = getItemCategory(offer.item);
+        const isOtherUser = offer.seller !== currentUser;
+        return itemCategory === currentMarketCategory && isOtherUser;
+    });
+}
+
+// 📄 Renderizar paginación
+function renderMarketPagination(totalPages) {
+    const pagination = document.getElementById('marketPagination');
+    if (!pagination || totalPages <= 1) {
+        pagination.innerHTML = '';
+        return;
+    }
+    
+    let paginationHtml = '';
+    
+    // Botón anterior
+    if (currentMarketPage > 1) {
+        paginationHtml += `<button class="action-btn" onclick="changeMarketPage(${currentMarketPage - 1})" style="background: #666; color: #fff; padding: 6px 10px; font-size: 11px;">◀</button>`;
+    }
+    
+    // Mostrar máximo 5 páginas
+    let startPage = Math.max(1, currentMarketPage - 2);
+    let endPage = Math.min(totalPages, startPage + 4);
+    
+    if (endPage - startPage < 4) {
+        startPage = Math.max(1, endPage - 4);
+    }
+    
+    for (let i = startPage; i <= endPage; i++) {
+        const isActive = i === currentMarketPage;
+        const btnStyle = isActive 
+            ? 'background: #ff0080; color: #fff;' 
+            : 'background: rgba(255, 0, 128, 0.2); color: #ff0080; border: 1px solid #ff0080;';
+        
+        paginationHtml += `<button class="action-btn" onclick="changeMarketPage(${i})" style="${btnStyle} padding: 6px 10px; font-size: 11px;">${i}</button>`;
+    }
+    
+    // Botón siguiente
+    if (currentMarketPage < totalPages) {
+        paginationHtml += `<button class="action-btn" onclick="changeMarketPage(${currentMarketPage + 1})" style="background: #666; color: #fff; padding: 6px 10px; font-size: 11px;">▶</button>`;
+    }
+    
+    pagination.innerHTML = paginationHtml;
+}
+
+
+// 📬 Sistema de mensajes/chat
+function contactSeller(offerId, sellerName) {
+    if (!chatUsers[sellerName]) {
+        chatUsers[sellerName] = {
+            messages: [],
+            unread: 0
+        };
+    }
+    
+    activeChatUser = sellerName;
+    showChatWindow(sellerName, offerId);
+}
+
+function showChatWindow(userName, offerId = null) {
+    const offer = offerId ? marketOffers.find(o => o.id === offerId) : null;
+    
+    let chatHtml = `
+        <div style="background: linear-gradient(135deg, #0d1b2a 0%, #1b263b 100%); padding: 20px; border-radius: 15px; border: 2px solid #00d4ff; height: 500px; display: flex; flex-direction: column;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #333;">
+                <h3 style="color: #00d4ff;">💬 Chat con ${userName}</h3>
+                <button class="action-btn" onclick="showMarketChat()" style="background: #666; color: #fff;">📋 Ver Todos</button>
+            </div>
+            
+            ${offer ? `
+                <div style="background: rgba(255, 0, 128, 0.1); border: 1px solid #ff0080; border-radius: 8px; padding: 10px; margin-bottom: 15px;">
+                    <div style="color: #ff0080; font-size: 12px;">📦 Oferta relacionada:</div>
+                    <div style="color: #ffff00;">${getItemEmoji(offer.item)} ${offer.item} - ${offer.quantity} unidades - $${offer.price.toLocaleString()}</div>
+                </div>
+            ` : ''}
+            
+            <div id="chatMessages" style="flex: 1; overflow-y: auto; background: rgba(0, 0, 0, 0.5); border-radius: 8px; padding: 15px; margin-bottom: 15px;">
+                ${renderChatMessages(userName)}
+            </div>
+            
+            <div style="display: flex; gap: 10px;">
+                <input type="text" id="chatMessageInput" placeholder="Escribe tu mensaje..." style="flex: 1; padding: 10px; background: rgba(0,0,0,0.7); border: 2px solid #00d4ff; border-radius: 8px; color: #00d4ff;" onkeypress="if(event.key==='Enter') sendChatMessage('${userName}')">
+                <button class="action-btn" onclick="sendChatMessage('${userName}')" style="background: #00d4ff; color: #000;">📤 ENVIAR</button>
+            </div>
+        </div>
+    `;
+    
+    document.getElementById('modalTitle').textContent = '💬 Sistema de Mensajes';
+    document.getElementById('modalContent').innerHTML = chatHtml;
+    document.getElementById('quantityButtons').style.display = 'none';
+    document.getElementById('operationModal').classList.add('active');
+    // Inicializar opciones de items
+updateItemOptions();
+    
+    // Marcar mensajes como leídos
+    if (chatUsers[userName]) {
+        chatUsers[userName].unread = 0;
+        saveChatData();
+    }
+}
+
+// 💬 Renderizar mensajes del chat
+function renderChatMessages(userName) {
+    if (!chatUsers[userName] || !chatUsers[userName].messages.length) {
+        return '<div style="color: #666; text-align: center; font-style: italic;">No hay mensajes aún. ¡Inicia la conversación!</div>';
+    }
+    
+    let messagesHtml = '';
+    
+    chatUsers[userName].messages.forEach(message => {
+        const isMyMessage = message.from === currentUser;
+        const messageStyle = isMyMessage 
+            ? 'background: rgba(0, 255, 65, 0.2); border-left: 3px solid #00ff41; margin-left: 20px;'
+            : 'background: rgba(0, 212, 255, 0.2); border-left: 3px solid #00d4ff; margin-right: 20px;';
+        
+        const time = new Date(message.timestamp).toLocaleTimeString();
+        
+        messagesHtml += `
+            <div style="${messageStyle} padding: 10px; margin-bottom: 10px; border-radius: 8px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                    <span style="color: ${isMyMessage ? '#00ff41' : '#00d4ff'}; font-weight: bold; font-size: 12px;">${message.from}</span>
+                    <span style="color: #999; font-size: 11px;">${time}</span>
+                </div>
+                <div style="color: #fff;">${message.text}</div>
+            </div>
+        `;
+    });
+    
+    return messagesHtml;
+}
+
+// 📤 Enviar mensaje
+function sendChatMessage(toUser) {
+    const messageInput = document.getElementById('chatMessageInput');
+    const messageText = messageInput.value.trim();
+    
+    if (!messageText) return;
+    
+    if (!chatUsers[toUser]) {
+        chatUsers[toUser] = { messages: [], unread: 0 };
+    }
+    
+    const newMessage = {
+        from: currentUser,
+        to: toUser,
+        text: messageText,
+        timestamp: new Date().toISOString(),
+        id: Date.now() + Math.random()
+    };
+    
+    chatUsers[toUser].messages.push(newMessage);
+    
+    // También agregar el mensaje al chat del otro usuario
+    if (!chatUsers[currentUser]) {
+        chatUsers[currentUser] = { messages: [], unread: 0 };
+    }
+    
+    // Simular que el otro usuario recibe el mensaje
+    saveChatData();
+    
+    messageInput.value = '';
+    
+    // Refresh chat
+    document.getElementById('chatMessages').innerHTML = renderChatMessages(toUser);
+    
+    // Scroll to bottom
+    const chatMessages = document.getElementById('chatMessages');
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+// 💬 Mostrar lista de chats
+function showMarketChat() {
+    let chatListHtml = `
+        <div style="max-height: 400px; overflow-y: auto;">
+            <h3 style="color: #00d4ff; text-align: center; margin-bottom: 15px;">💬 Tus Conversaciones</h3>
+    `;
+    
+    if (Object.keys(chatUsers).length === 0) {
+        chatListHtml += '<div style="color: #666; text-align: center; font-style: italic; padding: 40px;">No tienes conversaciones aún</div>';
+    } else {
+        Object.entries(chatUsers).forEach(([userName, chatData]) => {
+            if (userName === currentUser) return;
+            
+            const lastMessage = chatData.messages[chatData.messages.length - 1];
+            const unreadBadge = chatData.unread > 0 ? `<span style="background: #ff0080; color: #fff; border-radius: 50%; padding: 2px 6px; font-size: 10px;">${chatData.unread}</span>` : '';
+            
+            chatListHtml += `
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; margin-bottom: 8px; background: rgba(0, 0, 0, 0.6); border: 1px solid #333; border-radius: 8px; cursor: pointer; transition: all 0.3s;" onclick="showChatWindow('${userName}')">
+                    <div>
+                        <div style="color: #00d4ff; font-weight: bold;">${userName} ${unreadBadge}</div>
+                        ${lastMessage ? `<div style="color: #999; font-size: 12px;">${lastMessage.text.substring(0, 50)}${lastMessage.text.length > 50 ? '...' : ''}</div>` : ''}
+                        ${lastMessage ? `<div style="color: #666; font-size: 11px;">${new Date(lastMessage.timestamp).toLocaleDateString()}</div>` : ''}
+                   </div>
+                   <div style="color: #00d4ff;">💬</div>
+               </div>
+           `;
+       });
+   }
+   
+   chatListHtml += `
+       </div>
+       <div style="margin-top: 20px; text-align: center;">
+           <button class="btn" onclick="showBlackMarket()" style="background: linear-gradient(45deg, #ff0080, #cc0066);">🔙 VOLVER AL MERCADO</button>
+       </div>
+   `;
+   
+   document.getElementById('modalTitle').textContent = '💬 Sistema de Mensajes';
+   document.getElementById('modalContent').innerHTML = chatListHtml;
+   document.getElementById('quantityButtons').style.display = 'none';
+   document.getElementById('operationModal').classList.add('active');
+}
+
+// 🛒 Compra rápida
+function quickBuy(offerId) {
+   const offer = marketOffers.find(o => o.id === offerId);
+   if (!offer) {
+       alert('Oferta no encontrada');
+       return;
+   }
+   
+   if (offer.seller === currentUser) {
+       alert('No puedes comprar tu propia oferta');
+       return;
+   }
+   
+   const gangs = JSON.parse(localStorage.getItem('gangs') || '{}');
+   const buyerGang = gangs[currentGang];
+   const sellerGang = gangs[offer.gangCode];
+   
+   if (!buyerGang || !sellerGang) {
+       alert('Error: Pandillas no encontradas');
+       return;
+   }
+   
+   // Verificar dinero
+   if (buyerGang.money < offer.price) {
+       alert(`No tienes suficiente dinero. Necesitas $${offer.price.toLocaleString()}`);
+       return;
+   }
+   
+   // Verificar disponibilidad del item en venta
+   if (offer.type === 'venta') {
+       const availableQuantity = sellerGang.inventory.items[offer.item]?.quantity || 0;
+       if (availableQuantity < offer.quantity) {
+           alert('El vendedor ya no tiene suficiente stock disponible');
+           return;
+       }
+   }
+   
+   const confirmMessage = `¿Confirmar compra?\n\n${getItemEmoji(offer.item)} ${offer.item}\nCantidad: ${offer.quantity}\nPrecio: $${offer.price.toLocaleString()}\nVendedor: ${offer.gangName}`;
+   
+   if (confirm(confirmMessage)) {
+       executeMarketTransaction(offer);
+   }
+}
+
+// 💰 Ejecutar transacción del mercado
+function executeMarketTransaction(offer) {
+   const gangs = JSON.parse(localStorage.getItem('gangs') || '{}');
+   const buyerGang = gangs[currentGang];
+   const sellerGang = gangs[offer.gangCode];
+   
+   try {
+       if (offer.type === 'venta') {
+           // Transferir dinero
+           buyerGang.money -= offer.price;
+           sellerGang.money += offer.price;
+           
+           // Transferir item
+           // Quitar del vendedor
+           sellerGang.inventory.items[offer.item].quantity -= offer.quantity;
+           if (sellerGang.inventory.items[offer.item].quantity <= 0) {
+               delete sellerGang.inventory.items[offer.item];
+           }
+           
+           // Dar al comprador
+           if (!buyerGang.inventory.items[offer.item]) {
+               buyerGang.inventory.items[offer.item] = {
+                   quantity: 0,
+                   price: sellerGang.inventory.items[offer.item]?.price || 1000
+               };
+           }
+           buyerGang.inventory.items[offer.item].quantity += offer.quantity;
+       }
+       
+       // Guardar cambios
+       localStorage.setItem('gangs', JSON.stringify(gangs));
+       
+       // Remover oferta del mercado
+       const offers = JSON.parse(localStorage.getItem('marketOffers') || '[]');
+       const updatedOffers = offers.filter(o => o.id !== offer.id);
+       localStorage.setItem('marketOffers', JSON.stringify(updatedOffers));
+       
+       // Crear mensaje automático de confirmación
+       if (!chatUsers[offer.seller]) {
+           chatUsers[offer.seller] = { messages: [], unread: 0 };
+       }
+       
+       const confirmationMessage = {
+           from: 'SISTEMA',
+           to: offer.seller,
+           text: `✅ Transacción completada: ${currentUser} compró ${offer.quantity}x ${offer.item} por $${offer.price.toLocaleString()}`,
+           timestamp: new Date().toISOString(),
+           id: Date.now() + Math.random()
+       };
+       
+       chatUsers[offer.seller].messages.push(confirmationMessage);
+       saveChatData();
+       
+       alert(`¡Compra exitosa!\n\nRecibiste: ${offer.quantity}x ${offer.item}\nPagaste: $${offer.price.toLocaleString()}`);
+       
+       // Refresh market
+       showBlackMarket();
+       
+   } catch (error) {
+       console.error('Error en transacción:', error);
+       alert('Error al procesar la transacción');
+   }
+}
+
+// 📋 Mostrar mis ofertas
+function showMyOffers() {
+   const myOffers = marketOffers.filter(offer => offer.seller === currentUser && offer.active !== false);
+   
+   let myOffersHtml = `
+       <div style="max-height: 400px; overflow-y: auto;">
+           <h3 style="color: #ffff00; text-align: center; margin-bottom: 15px;">📋 Tus Ofertas Activas</h3>
+   `;
+   
+   if (myOffers.length === 0) {
+       myOffersHtml += '<div style="color: #666; text-align: center; font-style: italic; padding: 40px;">No tienes ofertas activas</div>';
+   } else {
+       myOffers.forEach(offer => {
+           const typeColor = offer.type === 'venta' ? '#00ff41' : '#ff6b35';
+           const typeText = offer.type === 'venta' ? '💰 VENDE' : '🛒 COMPRA';
+           
+           myOffersHtml += `
+               <div style="background: rgba(0, 0, 0, 0.6); border: 2px solid ${typeColor}; border-radius: 10px; padding: 15px; margin-bottom: 15px;">
+                   <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                       <span style="color: ${typeColor}; font-weight: bold;">${typeText}</span>
+                       <span style="color: #666; font-size: 12px;">${new Date(offer.timestamp).toLocaleDateString()}</span>
+                   </div>
+                   
+                   <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
+                       <span style="font-size: 20px;">${getItemEmoji(offer.item)}</span>
+                       <div>
+                           <div style="color: #ffff00; font-weight: bold;">${offer.item}</div>
+                           <div style="color: #999; font-size: 12px;">📦 ${offer.quantity} unidades</div>
+                       </div>
+                   </div>
+                   
+                   <div style="margin-bottom: 10px;">
+                       <div style="color: #00ff41; font-size: 16px; font-weight: bold;">💰 $${offer.price.toLocaleString()}</div>
+                   </div>
+                   
+                   ${offer.description ? `<div style="color: #ffff00; font-size: 12px; margin-bottom: 10px; font-style: italic;">"${offer.description}"</div>` : ''}
+                   
+                   <div style="display: flex; gap: 8px;">
+                       <button class="action-btn" style="background: #ff3030; color: #fff; flex: 1;" onclick="deleteMyOffer('${offer.id}')">🗑️ ELIMINAR</button>
+                       <button class="action-btn" style="background: #ff6b35; color: #fff; flex: 1;" onclick="editMyOffer('${offer.id}')">✏️ EDITAR</button>
+                   </div>
+               </div>
+           `;
+       });
+   }
+   
+   myOffersHtml += `
+       </div>
+       <div style="margin-top: 20px; text-align: center;">
+           <button class="btn" onclick="showCreateOfferModal()" style="background: linear-gradient(45deg, #00ff41, #00cc33); margin-right: 10px;">📢 NUEVA OFERTA</button>
+           <button class="btn" onclick="showBlackMarket()" style="background: linear-gradient(45deg, #ff0080, #cc0066);">🔙 VOLVER</button>
+       </div>
+   `;
+   
+   document.getElementById('modalTitle').textContent = '📋 Mis Ofertas';
+   document.getElementById('modalContent').innerHTML = myOffersHtml;
+   document.getElementById('quantityButtons').style.display = 'none';
+   document.getElementById('operationModal').classList.add('active');
+}
+
+// 🗑️ Eliminar mi oferta
+function deleteMyOffer(offerId) {
+    if (!confirm('¿Estás seguro de que quieres eliminar esta oferta?')) {
+        return;
+    }
+    
+    // 1. Eliminar del localStorage
+    const offers = JSON.parse(localStorage.getItem('marketOffers') || '[]');
+    const updatedOffers = offers.filter(o => o.id !== offerId);
+    localStorage.setItem('marketOffers', JSON.stringify(updatedOffers));
+    
+    // 2. CRUCIAL: Eliminar también del array local marketOffers
+    marketOffers = marketOffers.filter(o => o.id !== offerId);
+    
+    alert('Oferta eliminada');
+    showMyOffers(); // Refresh
+}
+
+// ✏️ Editar mi oferta
+function editMyOffer(offerId) {
+   const offer = marketOffers.find(o => o.id === offerId);
+   if (!offer) {
+       alert('Oferta no encontrada');
+       return;
+   }
+   
+   const editOfferHtml = `
+       <div style="text-align: left;">
+           <div class="form-group">
+               <label style="color: #ff0080;">📦 Item:</label>
+               <input type="text" id="editOfferItem" value="${offer.item}" disabled style="width: 100%; padding: 10px; background: rgba(100,100,100,0.3); border: 2px solid #666; border-radius: 8px; color: #999;">
+           </div>
+           
+           <div class="form-group">
+               <label style="color: #ff0080;">📊 Cantidad:</label>
+               <input type="number" id="editOfferQuantity" value="${offer.quantity}" min="1" style="width: 100%; padding: 10px; background: rgba(0,0,0,0.7); border: 2px solid #ff0080; border-radius: 8px; color: #ff0080;">
+           </div>
+           
+           <div class="form-group">
+               <label style="color: #ff0080;">💰 Precio Total:</label>
+               <input type="number" id="editOfferPrice" value="${offer.price}" style="width: 100%; padding: 10px; background: rgba(0,0,0,0.7); border: 2px solid #ff0080; border-radius: 8px; color: #ff0080;">
+           </div>
+           
+           <div class="form-group">
+               <label style="color: #ff0080;">📝 Descripción:</label>
+               <textarea id="editOfferDescription" style="width: 100%; height: 80px; padding: 10px; background: rgba(0,0,0,0.7); border: 2px solid #ff0080; border-radius: 8px; color: #ff0080; resize: vertical;">${offer.description || ''}</textarea>
+           </div>
+           
+           <div style="display: flex; gap: 10px;">
+               <button class="btn" onclick="updateMyOffer('${offerId}')" style="flex: 1; background: linear-gradient(45deg, #00ff41, #00cc33);">💾 GUARDAR</button>
+               <button class="btn" onclick="showMyOffers()" style="flex: 1; background: linear-gradient(45deg, #666, #444);">❌ CANCELAR</button>
+           </div>
+       </div>
+   `;
+   
+   document.getElementById('modalTitle').textContent = '✏️ Editar Oferta';
+   document.getElementById('modalContent').innerHTML = editOfferHtml;
+   document.getElementById('quantityButtons').style.display = 'none';
+   document.getElementById('operationModal').classList.add('active');
+}
+
+// 💾 Actualizar mi oferta
+function updateMyOffer(offerId) {
+   const quantity = parseInt(document.getElementById('editOfferQuantity').value);
+   const price = parseInt(document.getElementById('editOfferPrice').value);
+   const description = document.getElementById('editOfferDescription').value.trim();
+   
+   if (!quantity || !price || quantity <= 0 || price <= 0) {
+       alert('Completa todos los campos obligatorios');
+       return;
+   }
+   
+   const offers = JSON.parse(localStorage.getItem('marketOffers') || '[]');
+   const offerIndex = offers.findIndex(o => o.id === offerId);
+   
+   if (offerIndex === -1) {
+       alert('Oferta no encontrada');
+       return;
+   }
+   
+   offers[offerIndex].quantity = quantity;
+   offers[offerIndex].price = price;
+   offers[offerIndex].description = description;
+   offers[offerIndex].timestamp = new Date().toISOString(); // Actualizar timestamp
+   
+   localStorage.setItem('marketOffers', JSON.stringify(offers));
+   
+   alert('Oferta actualizada');
+   showMyOffers(); // Refresh
+}
+
+// 🔄 Cambiar página del mercado
+function changeMarketPage(page) {
+   currentMarketPage = page;
+   renderMarketOffers();
+}
+
+// 💾 Guardar datos del chat
+function saveChatData() {
+   localStorage.setItem('marketChats', JSON.stringify(chatUsers));
+}
+
+// 📂 Cargar datos del chat
+function loadChatData() {
+   const savedChats = localStorage.getItem('marketChats');
+   if (savedChats) {
+       chatUsers = JSON.parse(savedChats);
+   }
+}
+
+// 💾 Guardar ofertas del mercado
+function saveMarketOffers() {
+   // Guardar todas las ofertas (incluyendo las auto para persistencia de estado)
+   localStorage.setItem('marketOffers', JSON.stringify(marketOffers));
+}
+// 🎯 Función para obtener emoji de items
+function getItemEmoji(itemName) {
+    const itemLower = itemName.toLowerCase();
+    
+    // Armas
+    if (itemLower.includes('glock')) return '🔫';
+    if (itemLower.includes('beretta')) return '🔫';
+    if (itemLower.includes('vintage')) return '🔫';
+    if (itemLower.includes('ak-47')) return '🔫';
+    if (itemLower.includes('ar-15')) return '🔫';
+    if (itemLower.includes('desert')) return '🔫';
+    if (itemLower.includes('mp5')) return '🔫';
+    if (itemLower.includes('rifle')) return '🎯';
+    if (itemLower.includes('escopeta')) return '🔫';
+    if (itemLower.includes('uzi')) return '🔫';
+    if (itemLower.includes('rpg')) return '🚀';
+    if (itemLower.includes('granada')) return '💣';
+    if (itemLower.includes('hacha')) return '🪓';
+    if (itemLower.includes('machete')) return '🔪';
+    
+    // Cargadores
+    if (itemLower.includes('cargador')) return '📦';
+    if (itemLower.includes('cartucho')) return '📦';
+    
+    // Drogas
+    if (itemLower.includes('pcp')) return '💊';
+    if (itemLower.includes('galletas')) return '🍪';
+    if (itemLower.includes('fentanilo')) return '💊';
+    if (itemLower.includes('marihuana')) return '🌿';
+    if (itemLower.includes('bong')) return '💨';
+    if (itemLower.includes('cocaína')) return '💊';
+    if (itemLower.includes('heroína')) return '💉';
+    if (itemLower.includes('metanfetamina')) return '💊';
+    if (itemLower.includes('lsd')) return '💊';
+    if (itemLower.includes('éxtasis')) return '💊';
+    
+    // Planos
+    if (itemLower.includes('plano')) return '🗺️';
+    if (itemLower.includes('supermercado')) return '🗺️';
+    if (itemLower.includes('gasolinera')) return '🗺️';
+    if (itemLower.includes('joyeria')) return '🗺️';
+    if (itemLower.includes('barberia')) return '🗺️';
+    if (itemLower.includes('licoreria')) return '🗺️';
+    if (itemLower.includes('farmacia')) return '🗺️';
+    if (itemLower.includes('arquitectónico')) return '🗺️';
+    if (itemLower.includes('ropa')) return '🗺️';
+    if (itemLower.includes('tatuaje')) return '🗺️';
+    
+    // Emoji genérico para items no reconocidos
+    return '📦';
+}
+// 🎯 Obtener categoría de un item
+function getItemCategory(itemName) {
+    const itemLower = itemName.toLowerCase();
+    
+    if (itemLower.includes('glock') || itemLower.includes('beretta') || itemLower.includes('vintage') || 
+        itemLower.includes('ak-47') || itemLower.includes('ar-15') || itemLower.includes('desert') ||
+        itemLower.includes('mp5') || itemLower.includes('rifle') || itemLower.includes('escopeta') ||
+        itemLower.includes('uzi') || itemLower.includes('rpg') || itemLower.includes('granada') ||
+        itemLower.includes('hacha') || itemLower.includes('machete')) {
+        return 'armas';
+    }
+    
+    if (itemLower.includes('cargador') || itemLower.includes('cartucho')) {
+        return 'cargadores';
+    }
+    
+    if (itemLower.includes('pcp') || itemLower.includes('galletas') || itemLower.includes('fentanilo') ||
+        itemLower.includes('marihuana') || itemLower.includes('bong') || itemLower.includes('cocaína') ||
+        itemLower.includes('heroína') || itemLower.includes('metanfetamina') || itemLower.includes('lsd') ||
+        itemLower.includes('éxtasis')) {
+        return 'drogas';
+    }
+    
+    if (itemLower.includes('plano') || itemLower.includes('supermercado') || itemLower.includes('gasolinera') ||
+        itemLower.includes('joyeria') || itemLower.includes('barberia') || itemLower.includes('licoreria') ||
+        itemLower.includes('farmacia') || itemLower.includes('arquitectónico') || itemLower.includes('ropa') ||
+        itemLower.includes('tatuaje')) {
+        return 'planos';
+    }
+    
+    return 'otros';
+}
+
+// 🚀 Inicializar mercado negro al cargar
+document.addEventListener('DOMContentLoaded', function() {
+   loadChatData();
+});
+
+// 🎨 CSS para el mercado negro
+const marketStyles = `
+   .market-filter {
+       background: rgba(255, 0, 128, 0.2);
+       border: 2px solid #ff0080;
+       color: #ff0080;
+       padding: 8px 12px;
+       border-radius: 8px;
+       cursor: pointer;
+       transition: all 0.3s;
+       text-align: center;
+       font-weight: bold;
+       font-size: 12px;
+   }
+   
+   .market-filter:hover {
+       background: rgba(255, 0, 128, 0.4);
+       transform: translateY(-2px);
+       box-shadow: 0 4px 15px rgba(255, 0, 128, 0.3);
+   }
+   
+   .market-filter.active {
+       background: linear-gradient(45deg, #ff0080, #cc0066);
+       color: #fff;
+       box-shadow: 0 0 20px rgba(255, 0, 128, 0.6);
+   }
+   
+   .market-offer-card:hover {
+       transform: translateY(-5px);
+       box-shadow: 0 8px 25px rgba(255, 0, 128, 0.4);
+   }
+   
+   .action-btn {
+       padding: 8px 12px;
+       border: none;
+       border-radius: 6px;
+       cursor: pointer;
+       font-weight: bold;
+       font-size: 12px;
+       transition: all 0.3s;
+       text-transform: uppercase;
+   }
+   
+   .action-btn:hover {
+       transform: translateY(-2px);
+       filter: brightness(1.1);
+   }
+`;
+
+// Inyectar estilos
+if (!document.getElementById('marketStyles')) {
+   const styleSheet = document.createElement('style');
+   styleSheet.id = 'marketStyles';
+   styleSheet.textContent = marketStyles;
+   document.head.appendChild(styleSheet);
+}
+const newMarketStyles = `
+    .product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(255, 0, 128, 0.3);
+    }
+    
+    .category-btn {
+        background: rgba(255,255,255,0.1);
+        border: 2px solid #333;
+        color: #fff;
+        padding: 12px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s;
+        text-align: center;
+        min-width: 70px;
+    }
+    
+    .category-btn:hover {
+        background: rgba(255, 0, 128, 0.2);
+        border-color: #ff0080;
+        transform: translateY(-2px);
+    }
+    
+    .category-btn.active {
+        background: #ff0080;
+        border-color: #ff0080;
+        color: #fff;
+    }
+    
+    .btn-modern {
+        background: linear-gradient(45deg, #ff0080, #cc0066);
+        color: #fff;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: bold;
+        font-size: 12px;
+        transition: all 0.3s;
+    }
+    
+    .btn-modern:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(255, 0, 128, 0.4);
+    }
+    
+    .market-btn-primary {
+        background: #ff0080;
+        color: #fff;
+        border: none;
+        padding: 10px 16px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: bold;
+        font-size: 12px;
+        transition: all 0.3s;
+    }
+    
+    .market-btn-primary:hover {
+        background: #cc0066;
+        transform: translateY(-1px);
+    }
+    
+    .market-btn-secondary {
+        background: #fff;
+        color: #333;
+        border: 2px solid #ddd;
+        padding: 10px 16px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: bold;
+        font-size: 12px;
+        transition: all 0.3s;
+    }
+    
+    .market-btn-secondary:hover {
+        border-color: #ff0080;
+        color: #ff0080;
+        transform: translateY(-1px);
+    }
+    
+    .market-btn-danger {
+        background: #ff3030;
+        color: #fff;
+        border: none;
+        padding: 10px 16px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: bold;
+        font-size: 12px;
+        transition: all 0.3s;
+    }
+    
+    .market-btn-danger:hover {
+        background: #cc2020;
+        transform: translateY(-1px);
+    }
+`;
+
+// Inyectar nuevos estilos
+const improvedMarketStyles = `
+    .market-offer-row:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(255, 0, 128, 0.2);
+        background: rgba(255,255,255,1) !important;
+    }
+    
+    .market-filter {
+        background: rgba(255, 0, 128, 0.2);
+        border: 1px solid #ff0080;
+        color: #ff0080;
+        padding: 6px 10px;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-weight: bold;
+        font-size: 11px;
+    }
+    
+    .market-filter:hover {
+        background: rgba(255, 0, 128, 0.4);
+    }
+    
+    .market-filter.active {
+        background: #ff0080;
+        color: #fff;
+    }
+    
+    .category-btn {
+        background: rgba(255,255,255,0.1);
+        border: 1px solid #333;
+        color: #fff;
+        padding: 8px 12px;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-size: 11px;
+        text-align: center;
+    }
+    
+    .category-btn:hover {
+        background: rgba(255, 0, 128, 0.2);
+        border-color: #ff0080;
+    }
+    
+    .btn-modern {
+        background: linear-gradient(45deg, #ff0080, #cc0066);
+        color: #fff;
+        border: none;
+        padding: 6px 12px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: bold;
+        font-size: 11px;
+        transition: all 0.3s;
+    }
+    
+    .btn-modern:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 3px 10px rgba(255, 0, 128, 0.4);
+    }
+    
+    .market-btn-chat {
+        background: #00d4ff;
+        color: #fff;
+        border: none;
+        padding: 8px 10px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 12px;
+        transition: all 0.3s;
+        min-width: 35px;
+    }
+    
+    .market-btn-chat:hover {
+        background: #0099cc;
+        transform: translateY(-1px);
+    }
+    
+    .market-btn-buy {
+        background: #ff0080;
+        color: #fff;
+        border: none;
+        padding: 8px 10px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 12px;
+        transition: all 0.3s;
+        min-width: 35px;
+    }
+    
+    .market-btn-buy:hover {
+        background: #cc0066;
+        transform: translateY(-1px);
+    }
+    
+    .market-btn-edit {
+        background: #ff6b35;
+        color: #fff;
+        border: none;
+        padding: 8px 10px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 12px;
+        transition: all 0.3s;
+        min-width: 35px;
+    }
+    
+    .market-btn-edit:hover {
+        background: #cc5522;
+        transform: translateY(-1px);
+    }
+    
+    .market-btn-delete {
+        background: #ff3030;
+        color: #fff;
+        border: none;
+        padding: 8px 10px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 12px;
+        transition: all 0.3s;
+        min-width: 35px;
+    }
+    
+    .market-btn-delete:hover {
+        background: #cc2020;
+        transform: translateY(-1px);
+    }
+`;
+
+// Inyectar estilos mejorados
+if (!document.getElementById('improvedMarketStyles')) {
+    const improvedStyleSheet = document.createElement('style');
+    improvedStyleSheet.id = 'improvedMarketStyles';
+    improvedStyleSheet.textContent = improvedMarketStyles;
+    document.head.appendChild(improvedStyleSheet);
+}
+
+if (!document.getElementById('newMarketStyles')) {
+    const newStyleSheet = document.createElement('style');
+    newStyleSheet.id = 'newMarketStyles';
+    newStyleSheet.textContent = newMarketStyles;
+    document.head.appendChild(newStyleSheet);
+}
+function migrateOldInventory(oldInventory) {
+    const newInventory = initializeGangInventory();
+    
+    // Migrar cantidades del inventario antiguo
+    Object.keys(oldInventory).forEach(itemName => {
+        if (typeof oldInventory[itemName] === 'number') {
+            if (newInventory.items[itemName]) {
+                newInventory.items[itemName].quantity = oldInventory[itemName];
+            }
+        }
+    });
+    
+    return newInventory;
+}
+function canUserChangePrice() {
+    if (!currentGang) return false;
+    
+    const gangs = JSON.parse(localStorage.getItem('gangs') || '{}');
+    const gang = gangs[currentGang];
+    
+    if (!gang || !gang.inventory.members) return false;
+    
+    const userRole = gang.inventory.members[currentUser];
+    return userRole === 'lider' || userRole === 'sublider';
+}
+function showPriceModal(productName) {
+    if (!canUserChangePrice()) {
+        alert('Solo líderes y sublíderes pueden cambiar precios');
+        return;
+    }
+    
+    const gangs = JSON.parse(localStorage.getItem('gangs') || '{}');
+    const gang = gangs[currentGang];
+    const currentPrice = gang.inventory.items[productName]?.price || 0;
+    
+    currentOperation = 'price';
+    currentProduct = productName;
+    
+    document.getElementById('modalTitle').textContent = `💰 Cambiar Precio - ${productName}`;
+    document.getElementById('modalContent').innerHTML = `
+        <p>Precio actual: $${currentPrice.toLocaleString()}</p>
+        <div class="form-group">
+            <label>💰 Nuevo Precio:</label>
+            <input type="number" id="newPrice" placeholder="Ingresa el nuevo precio" value="${currentPrice}">
+        </div>
+        <button class="btn btn-secondary" onclick="updatePrice()">💰 Actualizar Precio</button>
+    `;
+    document.getElementById('quantityButtons').style.display = 'none';
+    document.getElementById('operationModal').classList.add('active');
+}
+
+function updatePrice() {
+    const newPrice = parseInt(document.getElementById('newPrice').value);
+    
+    if (isNaN(newPrice) || newPrice < 0) {
+        alert('Ingresa un precio válido');
+        return;
+    }
+    
+    const gangs = JSON.parse(localStorage.getItem('gangs') || '{}');
+    const gang = gangs[currentGang];
+    
+    const oldPrice = gang.inventory.items[currentProduct].price;
+    gang.inventory.items[currentProduct].price = newPrice;
+    
+    // Agregar log de cambio de precio
+    const logEntry = {
+        timestamp: new Date().toISOString(),
+        user: currentUser,
+        action: 'Cambió precio',
+        item: currentProduct,
+        oldPrice: oldPrice,
+        newPrice: newPrice
+    };
+    
+    if (!gang.inventory.logs) gang.inventory.logs = [];
+    gang.inventory.logs.unshift(logEntry);
+    
+    if (gang.inventory.logs.length > 50) {
+        gang.inventory.logs = gang.inventory.logs.slice(0, 50);
+    }
+    
+    localStorage.setItem('gangs', JSON.stringify(gangs));
+    
+    loadInventory();
+    actualizarValorTotal(); // ← AQUÍ YA ESTÁ INCLUIDA LA LLAMADA
+    closeModal();
+    alert(`Precio de ${currentProduct} actualizado a $${newPrice.toLocaleString()}`);
+    // Actualizar stats de admin si está visible
+if (currentUser === 'V4killa1312' && document.getElementById('adminPanel').style.display !== 'none') {
+    loadAdminStats();
+}
+}
+
+function showLogs() {
+    if (!currentGang) {
+        alert('No perteneces a ninguna pandilla');
+        return;
+    }
+    
+    const gangs = JSON.parse(localStorage.getItem('gangs') || '{}');
+    const gang = gangs[currentGang];
+    
+    if (!gang.inventory.logs || gang.inventory.logs.length === 0) {
+        alert('No hay logs disponibles');
+        return;
+    }
+    
+    let logsHtml = '<div style="max-height: 400px; overflow-y: auto;">';
+    
+    gang.inventory.logs.forEach(log => {
+        const date = new Date(log.timestamp).toLocaleString();
+        let logText = '';
+        
+        if (log.action === 'Cambió precio') {
+            logText = `💰 ${log.user} cambió precio de ${log.item} de $${log.oldPrice.toLocaleString()} a $${log.newPrice.toLocaleString()}`;
+        } else {
+            logText = `📦 ${log.user} ${log.action.toLowerCase()} ${log.quantity} ${log.item} (Total: ${log.newTotal})`;
+        }
+        
+        logsHtml += `
+            <div style="border-bottom: 1px solid #333; padding: 8px 0; font-size: 14px;">
+                <div style="color: #ffff00;">${date}</div>
+                <div style="color: #00ff41;">${logText}</div>
+            </div>
+        `;
+    });
+    
+    logsHtml += '</div>';
+    
+    document.getElementById('modalTitle').textContent = '📋 Historial de Actividades';
+    document.getElementById('modalContent').innerHTML = logsHtml;
+    document.getElementById('quantityButtons').style.display = 'none';
+    document.getElementById('operationModal').classList.add('active');
+}
+function showMemberManagement() {
+    if (!currentGang) {
+        alert('No perteneces a ninguna pandilla');
+        return;
+    }
+    
+    const gangs = JSON.parse(localStorage.getItem('gangs') || '{}');
+    const gang = gangs[currentGang];
+    
+    if (gang.leader !== currentUser) {
+        alert('Solo el líder puede gestionar miembros');
+        return;
+    }
+    
+    let membersHtml = '<div style="max-height: 300px; overflow-y: auto;">';
+    
+    gang.members.forEach(member => {
+    if (member === currentUser) return; // No mostrar al líder actual
+    
+    const memberRole = gang.inventory.members?.[member] || 'miembro';
+    let roleDisplay = '👤 Miembro';
+    if (memberRole === 'lider') roleDisplay = '👑 Líder';
+    else if (memberRole === 'sublider') roleDisplay = '🔱 Sublíder';
+    
+    membersHtml += `
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #333;">
+            <div>
+                <div style="color: #00ff41;">${member}</div>
+                <div style="color: #ffff00; font-size: 12px;">${roleDisplay}</div>
+            </div>
+            <div>
+                <button class="action-btn btn-price" onclick="changeRole('${member}', 'sublider')" ${memberRole === 'sublider' ? 'disabled' : ''}>👑 Sublíder</button>
+                <button class="action-btn btn-add" onclick="changeRole('${member}', 'miembro')" ${memberRole === 'miembro' ? 'disabled' : ''}>👤 Miembro</button>
+            </div>
+        </div>
+    `;
+});
+    
+    membersHtml += '</div>';
+    
+    document.getElementById('modalTitle').textContent = '👥 Gestión de Miembros';
+    document.getElementById('modalContent').innerHTML = membersHtml;
+    document.getElementById('quantityButtons').style.display = 'none';
+    document.getElementById('operationModal').classList.add('active');
+}
+
+function changeRole(member, newRole) {
+    const gangs = JSON.parse(localStorage.getItem('gangs') || '{}');
+    const gang = gangs[currentGang];
+    
+    const oldRole = gang.inventory.members[member] || 'miembro';
+    gang.inventory.members[member] = newRole;
+    
+    // Agregar log de cambio de rol
+    const logEntry = {
+        timestamp: new Date().toISOString(),
+        user: currentUser,
+        action: 'Cambió rol',
+        member: member,
+        oldRole: oldRole,
+        newRole: newRole
+    };
+    
+    if (!gang.inventory.logs) gang.inventory.logs = [];
+    gang.inventory.logs.unshift(logEntry);
+    
+    if (gang.inventory.logs.length > 50) {
+        gang.inventory.logs = gang.inventory.logs.slice(0, 50);
+    }
+    
+    localStorage.setItem('gangs', JSON.stringify(gangs));
+    
+    closeModal();
+    alert(`Rol de ${member} cambiado a ${newRole}`);
+    loadGangInfo();
+}
+// 💬 Abrir chat directo con usuario
+function openChatWithUser(userName, offerId = null) {
+    // Inicializar chat si no existe
+    if (!chatUsers[userName]) {
+        chatUsers[userName] = {
+            messages: [],
+            unread: 0
+        };
+    }
+    
+    // Enviar mensaje automático de interés si hay una oferta específica
+    if (offerId) {
+        const offer = marketOffers.find(o => o.id === offerId);
+        if (offer) {
+            const autoMessage = {
+                from: currentUser,
+                to: userName,
+                text: `Hola! Estoy interesado en tu oferta: ${offer.item} (${offer.quantity} unidades) por $${offer.price.toLocaleString()}`,
+                timestamp: new Date().toISOString(),
+                id: Date.now() + Math.random(),
+                isAuto: true
+            };
+            
+            chatUsers[userName].messages.push(autoMessage);
+            saveChatData();
+        }
+    }
+    
+    activeChatUser = userName;
+    showChatWindow(userName, offerId);
+}
+    </script>
+</body>
+</html>
